@@ -1,0 +1,27 @@
+@if (data.error()) {
+  <p class="state state--error" role="alert">Не удалось загрузить данные. Попробуйте обновить страницу позже.</p>
+} @else {
+  @let weekType = calendar.weekType();
+  @let schedule = scheduleState.schedule();
+  @let todayPlan = scheduleState.todayPlan();
+
+  @if (weekType && schedule && todayPlan) {
+    <div class="grid">
+      <app-week-type-card
+        [weekType]="weekType"
+        [weekStart]="calendar.weekStart()"
+        [weekEnd]="calendar.weekEnd()"
+        [events]="calendar.todayEvents()"
+      />
+      <app-today-lessons [plan]="todayPlan" [durationMinutes]="schedule.lessonDurationMinutes" />
+      <app-week-schedule
+        class="wide"
+        [schedule]="schedule"
+        [currentWeekType]="weekType"
+        [todayWeekday]="calendar.todayWeekday()"
+      />
+    </div>
+  } @else {
+    <p class="state" aria-live="polite">Загрузка…</p>
+  }
+}

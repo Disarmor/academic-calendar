@@ -1,0 +1,26 @@
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+
+  @media (min-width: 48rem) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+}
+
+.wide {
+  @media (min-width: 48rem) {
+    grid-column: 1 / -1;
+  }
+}
+
+.state {
+  padding: 2rem 0;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.state--error {
+  color: var(--danger);
+}

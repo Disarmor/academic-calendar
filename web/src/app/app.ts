@@ -8,5 +8,5 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './app.html',
 })
 export class App {
-  protected readonly title = 'Академический календарь УТС(м)-1-26';
+  protected readonly title = 'Группа УТС(м)-1-26';
 }

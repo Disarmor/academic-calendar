@@ -1,0 +1,20 @@
+{
+  "title": "Осенний семестр, 1–2 модуль",
+  "validFrom": "2026-09-15",
+  "validTo": "2026-12-31",
+  "lessonDurationMinutes": 80,
+  "lessons": [
+    { "weekday": 1, "start": "16:30", "week": "both", "kind": "practice", "subject": "Информационные технологии в науке и образовании", "teacher": "Кожекова Г. А.", "room": "2/410" },
+    { "weekday": 1, "start": "18:00", "week": "numerator", "kind": "practice", "subject": "Информационные технологии в науке и образовании", "teacher": "Кожекова Г. А.", "room": "2/410" },
+    { "weekday": 2, "start": "16:30", "week": "denominator", "kind": "practice", "subject": "Планирование, организация эксперимента и обработка экспериментальных данных", "teacher": "Акматбеков Р. А.", "room": "2/437" },
+    { "weekday": 2, "start": "16:30", "week": "numerator", "kind": "lab", "subject": "Современные проблемы теории управления", "teacher": "Кудакеева Г. М.", "room": "2/421" },
+    { "weekday": 2, "start": "18:00", "week": "both", "kind": "lecture", "subject": "Современные проблемы теории управления", "teacher": "Кудакеева Г. М.", "room": "2/421" },
+    { "weekday": 3, "start": "18:00", "week": "both", "kind": "lecture", "subject": "Хранение и защита компьютерной информации", "teacher": "Айдралиев А. О.", "room": "2/431" },
+    { "weekday": 3, "start": "19:30", "week": "denominator", "kind": "lab", "subject": "Хранение и защита компьютерной информации", "teacher": "Айдралиев А. О.", "room": "2/431" },
+    { "weekday": 4, "start": "16:30", "week": "both", "kind": "lecture", "subject": "Планирование, организация эксперимента и обработка экспериментальных данных", "teacher": "Акматбеков Р. А.", "room": "2/437" },
+    { "weekday": 4, "start": "18:00", "week": "both", "kind": "lecture", "subject": "Педагогика и психология высшей школы", "teacher": "Мамырова М.", "room": "1/348" },
+    { "weekday": 4, "start": "19:30", "week": "denominator", "kind": "practice", "subject": "Педагогика и психология высшей школы", "teacher": "Мамырова М.", "room": "1/348" },
+    { "weekday": 5, "start": "16:30", "week": "both", "kind": "practice", "subject": "НИР", "teacher": "Михеева Н. И.", "room": "2/410" },
+    { "weekday": 5, "start": "18:00", "week": "numerator", "kind": "practice", "subject": "НИР", "teacher": "Михеева Н. И.", "room": "2/410" }
+  ]
+}

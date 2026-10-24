@@ -1,0 +1,15 @@
+<div class="time">
+  <span class="start">{{ lesson().start }}</span>
+  <span class="end">{{ end() }}</span>
+</div>
+<div class="body">
+  <p class="subject">{{ lesson().subject }}</p>
+  <p class="meta">
+    <span class="kind kind--{{ lesson().kind }}">{{ kindLabels[lesson().kind] }}</span>
+    <span>ауд. {{ lesson().room }}</span>
+    <span>{{ lesson().teacher }}</span>
+  </p>
+  @if (status() === 'current') {
+    <span class="now">Идёт сейчас</span>
+  }
+</div>

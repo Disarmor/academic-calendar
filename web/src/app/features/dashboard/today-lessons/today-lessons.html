@@ -1,0 +1,20 @@
+<section class="card" aria-labelledby="today-title">
+  <h2 id="today-title">Сегодня</h2>
+
+  @let currentPlan = plan();
+  @if (currentPlan.kind === 'lessons') {
+    <ul class="list">
+      @for (item of currentPlan.agenda; track item.lesson.start + item.lesson.subject) {
+        <li>
+          <app-lesson-item [lesson]="item.lesson" [status]="item.status" [durationMinutes]="durationMinutes()" />
+        </li>
+      }
+    </ul>
+  } @else if (currentPlan.kind === 'no-classes') {
+    <p class="empty">Занятий нет — {{ currentPlan.reason.title }}.</p>
+  } @else if (currentPlan.kind === 'out-of-schedule') {
+    <p class="empty">Расписание на этот период пока не опубликовано.</p>
+  } @else {
+    <p class="empty">Сегодня занятий нет.</p>
+  }
+</section>

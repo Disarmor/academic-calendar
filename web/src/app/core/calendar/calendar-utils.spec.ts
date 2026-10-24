@@ -1,0 +1,56 @@
+import { CalendarEvent, WeekParityConfig } from '../../models/academic-calendar';
+import { activeEvents, findNoClassesReason, getWeekType } from './calendar-utils';
+
+const parity: WeekParityConfig = {
+  anchorWeekStart: '2026-09-07',
+  anchorWeekType: 'denominator',
+  overrides: [],
+};
+
+describe('getWeekType', () => {
+  it('совпадает с академическим календарём 2026/27', () => {
+    expect(getWeekType('2026-09-07', parity)).toBe('denominator');
+    expect(getWeekType('2026-09-13', parity)).toBe('denominator');
+    expect(getWeekType('2026-09-14', parity)).toBe('numerator');
+    expect(getWeekType('2026-10-24', parity)).toBe('denominator');
+    // Весенний семестр: строка «Январь-Февраль» начинается с недели знаменателя.
+    expect(getWeekType('2027-01-25', parity)).toBe('denominator');
+    expect(getWeekType('2027-02-01', parity)).toBe('numerator');
+  });
+
+  it('работает для дат до опорной недели', () => {
+    expect(getWeekType('2026-09-06', parity)).toBe('numerator');
+    expect(getWeekType('2026-08-31', parity)).toBe('numerator');
+    expect(getWeekType('2026-08-24', parity)).toBe('denominator');
+  });
+
+  it('учитывает ручные исправления', () => {
+    const withOverride: WeekParityConfig = {
+      ...parity,
+      overrides: [{ weekStart: '2026-10-19', weekType: 'numerator' }],
+    };
+    expect(getWeekType('2026-10-22', withOverride)).toBe('numerator');
+    expect(getWeekType('2026-10-26', withOverride)).toBe('numerator');
+  });
+});
+
+describe('события календаря', () => {
+  const events: CalendarEvent[] = [
+    { title: 'Исследовательская практика 1', type: 'practice', start: '2026-10-19', end: '2026-12-25' },
+    { title: 'Текущий контроль', type: 'control', start: '2026-11-02', end: '2026-11-06' },
+    { title: 'Новогодние каникулы', type: 'vacation', start: '2027-01-01', end: '2027-01-10' },
+  ];
+
+  it('находит события, активные в дату (границы включительно)', () => {
+    expect(activeEvents(events, '2026-11-06').map((event) => event.title)).toEqual([
+      'Исследовательская практика 1',
+      'Текущий контроль',
+    ]);
+    expect(activeEvents(events, '2026-11-07').map((event) => event.title)).toEqual(['Исследовательская практика 1']);
+  });
+
+  it('определяет дни без занятий', () => {
+    expect(findNoClassesReason(events, '2027-01-05')?.title).toBe('Новогодние каникулы');
+    expect(findNoClassesReason(events, '2026-11-03')).toBeUndefined();
+  });
+});
