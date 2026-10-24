@@ -18,6 +18,7 @@ const schedule: Schedule = {
   validFrom: '2026-09-15',
   validTo: '2026-12-31',
   lessonDurationMinutes: 80,
+  subjects: [],
   lessons: [
     lesson({ weekday: 1, start: '18:00', week: 'numerator', subject: 'Числитель' }),
     lesson({ weekday: 1, start: '16:30', subject: 'Каждую неделю' }),

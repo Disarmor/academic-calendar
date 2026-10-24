@@ -1,7 +1,7 @@
 import { Component, computed, input, linkedSignal } from '@angular/core';
 import { weekScheduleDays } from '../../../core/schedule/schedule-utils';
 import { WeekType } from '../../../models/academic-calendar';
-import { Schedule, Weekday } from '../../../models/schedule';
+import { Schedule, SubjectColor, Weekday } from '../../../models/schedule';
 import { WEEK_TYPE_LABELS, WEEKDAY_LABELS } from '../../../shared/labels';
 import { LessonItem } from '../../../shared/ui/lesson-item/lesson-item';
 
@@ -13,6 +13,7 @@ import { LessonItem } from '../../../shared/ui/lesson-item/lesson-item';
 })
 export class WeekSchedule {
   readonly schedule = input.required<Schedule>();
+  readonly subjectColors = input.required<Readonly<Record<string, SubjectColor>>>();
   readonly currentWeekType = input.required<WeekType>();
   readonly todayWeekday = input.required<Weekday>();
 

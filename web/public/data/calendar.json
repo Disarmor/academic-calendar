@@ -5,6 +5,11 @@
     "anchorWeekType": "denominator",
     "overrides": []
   },
+  "semesters": [
+    { "title": "Осенний семестр", "number": 1, "start": "2026-09-07", "end": "2027-01-24" },
+    { "title": "Весенний семестр", "number": 2, "start": "2027-01-25", "end": "2027-06-13" },
+    { "title": "Летний семестр", "start": "2027-06-14", "end": "2027-08-31" }
+  ],
   "events": [
     { "title": "Летние каникулы", "type": "vacation", "start": "2026-09-07", "end": "2026-09-13" },
     { "title": "Начало учебного года", "type": "semester", "start": "2026-09-15", "end": "2026-09-15" },

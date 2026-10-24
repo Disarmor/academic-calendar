@@ -1,0 +1,25 @@
+<section class="indicator indicator--{{ weekType() }}" aria-labelledby="week-indicator-title">
+  <div class="main">
+    <p class="caption" id="week-indicator-title">Сейчас</p>
+    <p class="type">{{ labels[weekType()] }}</p>
+    <p class="range mono">{{ weekStart() | date: 'dd.MM' }} — {{ weekEnd() | date: 'dd.MM.yyyy' }}</p>
+  </div>
+
+  <div class="switch" aria-hidden="true">
+    @for (type of weekTypes; track type) {
+      <span class="segment" [class.active]="type === weekType()">{{ labels[type] }}</span>
+    }
+  </div>
+
+  @if (events().length > 0) {
+    <ul class="events" aria-label="Сегодня по академическому календарю">
+      @for (event of events(); track event.title + event.start) {
+        <li class="event">
+          <span class="dot dot--{{ event.type }}" aria-hidden="true"></span>
+          {{ event.title }}
+          <span class="until mono">до {{ event.end | date: 'dd.MM' }}</span>
+        </li>
+      }
+    </ul>
+  }
+</section>

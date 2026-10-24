@@ -35,8 +35,17 @@ export interface WeekParityConfig {
   readonly overrides: readonly WeekTypeOverride[];
 }
 
+export interface Semester {
+  readonly title: string;
+  /** Номер семестра обучения группы; у летнего семестра номера нет. */
+  readonly number?: number;
+  readonly start: LocalDate;
+  readonly end: LocalDate;
+}
+
 export interface AcademicCalendar {
   readonly academicYear: string;
   readonly weekParity: WeekParityConfig;
+  readonly semesters: readonly Semester[];
   readonly events: readonly CalendarEvent[];
 }

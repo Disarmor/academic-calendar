@@ -1,0 +1,54 @@
+.marker {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 2px;
+  background: var(--note);
+}
+
+.notes {
+  display: grid;
+  gap: 0.625rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.note {
+  padding: 0.75rem 0.875rem;
+  border: 1px solid var(--note-border);
+  border-radius: var(--radius-sm);
+  background: var(--note-soft);
+}
+
+.pinned {
+  border-left: 3px solid var(--note);
+}
+
+.note-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.note-title {
+  font-size: 0.9375rem;
+  font-weight: 650;
+}
+
+.pin {
+  color: var(--note);
+  background: var(--surface);
+}
+
+.note-text {
+  margin: 0.25rem 0 0;
+  font-size: 0.875rem;
+  white-space: pre-line;
+}
+
+.note-date {
+  margin: 0.5rem 0 0;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}

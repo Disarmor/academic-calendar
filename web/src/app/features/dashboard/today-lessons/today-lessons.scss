@@ -1,3 +1,11 @@
+.count {
+  padding: 0 0.375rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  letter-spacing: 0;
+  background: var(--surface-muted);
+}
+
 .list {
   display: grid;
   gap: 0.5rem;
@@ -6,7 +14,21 @@
   list-style: none;
 }
 
-.empty {
-  margin: 0;
-  color: var(--text-muted);
+.free {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-sm);
+}
+
+.free-icon {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: none;
+  stroke: var(--text-muted);
+  stroke-width: 1.5;
+  stroke-linecap: round;
 }

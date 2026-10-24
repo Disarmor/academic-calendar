@@ -1,3 +1,9 @@
+<app-page-header
+  [today]="calendar.today()"
+  [semester]="calendar.semester()"
+  [announcementsCount]="announcementsState.announcements().length"
+/>
+
 @if (data.error()) {
   <p class="state state--error" role="alert">Не удалось загрузить данные. Попробуйте обновить страницу позже.</p>
 } @else {
@@ -6,20 +12,36 @@
   @let todayPlan = scheduleState.todayPlan();
 
   @if (weekType && schedule && todayPlan) {
-    <div class="grid">
-      <app-week-type-card
-        [weekType]="weekType"
-        [weekStart]="calendar.weekStart()"
-        [weekEnd]="calendar.weekEnd()"
-        [events]="calendar.todayEvents()"
-      />
-      <app-today-lessons [plan]="todayPlan" [durationMinutes]="schedule.lessonDurationMinutes" />
-      <app-week-schedule
-        class="wide"
-        [schedule]="schedule"
-        [currentWeekType]="weekType"
-        [todayWeekday]="calendar.todayWeekday()"
-      />
+    <app-week-indicator
+      [weekType]="weekType"
+      [weekStart]="calendar.weekStart()"
+      [weekEnd]="calendar.weekEnd()"
+      [events]="calendar.todayEvents()"
+    />
+
+    <div class="layout">
+      <div class="main">
+        <app-today-lessons
+          [plan]="todayPlan"
+          [durationMinutes]="schedule.lessonDurationMinutes"
+          [subjectColors]="scheduleState.subjectColors()"
+        />
+        <app-week-schedule
+          [schedule]="schedule"
+          [subjectColors]="scheduleState.subjectColors()"
+          [currentWeekType]="weekType"
+          [todayWeekday]="calendar.todayWeekday()"
+        />
+      </div>
+
+      <aside class="side" aria-label="Объявления и события">
+        <app-announcements-board
+          id="announcements"
+          [announcements]="announcementsState.announcements()"
+          [hasError]="announcementsState.hasError()"
+        />
+        <app-upcoming-events [items]="calendar.upcoming()" />
+      </aside>
     </div>
   } @else {
     <p class="state" aria-live="polite">Загрузка…</p>

@@ -1,0 +1,32 @@
+<header class="header">
+  <div class="brand">
+    <img class="logo" ngSrc="favicon.svg" width="36" height="36" alt="" priority />
+    <div>
+      <h1 class="title">УТС(м)-1-26</h1>
+      <p class="subtitle">Академический календарь · КГТУ им. И. Раззакова</p>
+    </div>
+  </div>
+
+  <div class="status">
+    <p class="date">
+      <time [attr.datetime]="today()">{{ today() | date: 'EEEE, d MMMM' }}</time>
+      @if (semester(); as current) {
+        <span class="semester">
+          {{ current.title }}
+          @if (current.number) {
+            · <span class="mono">{{ current.number }}</span>-й семестр обучения
+          }
+        </span>
+      }
+    </p>
+    <a class="bell" href="#announcements">
+      <svg class="bell-icon" viewBox="0 0 20 20" aria-hidden="true">
+        <path d="M10 2.5a5 5 0 0 0-5 5v3.2L3.5 13.5h13L15 10.7V7.5a5 5 0 0 0-5-5zM8 16a2 2 0 0 0 4 0" />
+      </svg>
+      <span class="visually-hidden">Объявления старосты</span>
+      @if (announcementsCount() > 0) {
+        <span class="badge mono">{{ announcementsCount() }}</span>
+      }
+    </a>
+  </div>
+</header>

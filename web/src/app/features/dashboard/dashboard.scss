@@ -1,18 +1,24 @@
-.grid {
+.layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
+  margin-top: 1rem;
 
-  @media (min-width: 48rem) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  @media (min-width: 64rem) {
+    grid-template-columns: minmax(0, 1fr) 22rem;
     align-items: start;
   }
 }
 
-.wide {
-  @media (min-width: 48rem) {
-    grid-column: 1 / -1;
-  }
+.main,
+.side {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+
+#announcements {
+  scroll-margin-top: 1rem;
 }
 
 .state {

@@ -1,5 +1,5 @@
-import { CalendarEvent, WeekParityConfig } from '../../models/academic-calendar';
-import { activeEvents, findNoClassesReason, getWeekType } from './calendar-utils';
+import { CalendarEvent, Semester, WeekParityConfig } from '../../models/academic-calendar';
+import { activeEvents, findNoClassesReason, findSemester, getWeekType, upcomingEvents } from './calendar-utils';
 
 const parity: WeekParityConfig = {
   anchorWeekStart: '2026-09-07',
@@ -52,5 +52,30 @@ describe('события календаря', () => {
   it('определяет дни без занятий', () => {
     expect(findNoClassesReason(events, '2027-01-05')?.title).toBe('Новогодние каникулы');
     expect(findNoClassesReason(events, '2026-11-03')).toBeUndefined();
+  });
+
+  it('отбирает ближайшие ещё не начавшиеся события без Учёного совета', () => {
+    const withCouncil: CalendarEvent[] = [
+      ...events,
+      { title: 'Учёный совет КГТУ', type: 'council', start: '2026-10-28', end: '2026-10-28' },
+    ];
+    expect(upcomingEvents(withCouncil, '2026-10-24', 5)).toEqual([
+      { event: events[1], daysUntil: 9 },
+      { event: events[2], daysUntil: 69 },
+    ]);
+    expect(upcomingEvents(withCouncil, '2026-10-24', 1)).toHaveLength(1);
+  });
+});
+
+describe('findSemester', () => {
+  const semesters: Semester[] = [
+    { title: 'Осенний семестр', number: 1, start: '2026-09-07', end: '2027-01-24' },
+    { title: 'Весенний семестр', number: 2, start: '2027-01-25', end: '2027-06-13' },
+  ];
+
+  it('находит семестр по дате', () => {
+    expect(findSemester(semesters, '2027-01-24')?.number).toBe(1);
+    expect(findSemester(semesters, '2027-01-25')?.number).toBe(2);
+    expect(findSemester(semesters, '2027-07-01')).toBeUndefined();
   });
 });

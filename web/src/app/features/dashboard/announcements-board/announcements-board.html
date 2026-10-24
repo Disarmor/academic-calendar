@@ -1,0 +1,29 @@
+<section class="card board" aria-labelledby="announcements-title">
+  <h2 class="card-title" id="announcements-title">
+    <span class="marker" aria-hidden="true"></span>
+    Объявления старосты
+  </h2>
+
+  @if (hasError()) {
+    <p class="empty" role="alert">Не удалось загрузить объявления.</p>
+  } @else {
+    <ul class="notes">
+      @for (note of announcements(); track note.date + note.title) {
+        <li class="note" [class.pinned]="note.pinned">
+          <div class="note-head">
+            <h3 class="note-title">{{ note.title }}</h3>
+            @if (note.pinned) {
+              <span class="tag pin">Важно</span>
+            }
+          </div>
+          <p class="note-text">{{ note.text }}</p>
+          <p class="note-date mono">
+            <time [attr.datetime]="note.date">{{ note.date | date: 'dd.MM.yyyy' }}</time>
+          </p>
+        </li>
+      } @empty {
+        <li class="empty">Новых объявлений нет.</li>
+      }
+    </ul>
+  }
+</section>

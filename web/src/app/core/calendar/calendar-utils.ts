@@ -2,6 +2,7 @@ import {
   CalendarEvent,
   CalendarEventType,
   LocalDate,
+  Semester,
   WeekParityConfig,
   WeekType,
 } from '../../models/academic-calendar';
@@ -9,6 +10,14 @@ import { daysBetween, startOfWeek } from '../time/local-date';
 
 /** События, в дни которых обычных занятий нет. */
 const NO_CLASSES_EVENT_TYPES: ReadonlySet<CalendarEventType> = new Set(['vacation', 'holiday', 'exams']);
+
+/** События, которые не касаются студентов напрямую и не попадают в список ближайших. */
+const HIDDEN_UPCOMING_EVENT_TYPES: ReadonlySet<CalendarEventType> = new Set(['council']);
+
+export interface UpcomingEvent {
+  readonly event: CalendarEvent;
+  readonly daysUntil: number;
+}
 
 function oppositeWeekType(weekType: WeekType): WeekType {
   return weekType === 'numerator' ? 'denominator' : 'numerator';
@@ -42,4 +51,17 @@ export function findNoClassesReason(
   date: LocalDate,
 ): CalendarEvent | undefined {
   return events.find((event) => NO_CLASSES_EVENT_TYPES.has(event.type) && isEventActive(event, date));
+}
+
+/** Ближайшие ещё не начавшиеся события, по дате начала. Идущие сейчас показываются отдельно. */
+export function upcomingEvents(events: readonly CalendarEvent[], today: LocalDate, limit: number): UpcomingEvent[] {
+  return events
+    .filter((event) => event.start > today && !HIDDEN_UPCOMING_EVENT_TYPES.has(event.type))
+    .sort((a, b) => a.start.localeCompare(b.start) || a.end.localeCompare(b.end))
+    .slice(0, limit)
+    .map((event) => ({ event, daysUntil: daysBetween(today, event.start) }));
+}
+
+export function findSemester(semesters: readonly Semester[], date: LocalDate): Semester | undefined {
+  return semesters.find((semester) => semester.start <= date && date <= semester.end);
 }

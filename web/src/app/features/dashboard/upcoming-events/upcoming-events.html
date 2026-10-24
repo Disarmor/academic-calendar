@@ -1,0 +1,25 @@
+<section class="card" aria-labelledby="upcoming-title">
+  <h2 class="card-title" id="upcoming-title">Ближайшие события</h2>
+
+  <ol class="timeline">
+    @for (item of items(); track item.event.title + item.event.start) {
+      <li class="item item--{{ item.event.type }}">
+        <time class="date mono" [attr.datetime]="item.event.start">
+          <span class="day">{{ item.event.start | date: 'dd' }}</span>
+          <span class="month">{{ item.event.start | date: 'MMM' }}</span>
+        </time>
+        <div class="info">
+          <p class="title">{{ item.event.title }}</p>
+          <p class="when">
+            {{ item.daysUntil | daysUntil }}
+            @if (item.event.end !== item.event.start) {
+              · до <span class="mono">{{ item.event.end | date: 'dd.MM' }}</span>
+            }
+          </p>
+        </div>
+      </li>
+    } @empty {
+      <li class="empty">Событий в академическом календаре больше нет.</li>
+    }
+  </ol>
+</section>

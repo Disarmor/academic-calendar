@@ -1,15 +1,29 @@
-<div class="time">
+<div class="time mono">
   <span class="start">{{ lesson().start }}</span>
   <span class="end">{{ end() }}</span>
 </div>
 <div class="body">
+  <div class="top">
+    <span class="tag kind kind--{{ lesson().kind }}">{{ kindLabels[lesson().kind] }}</span>
+    @if (status() === 'current') {
+      <span class="tag now">Идёт сейчас</span>
+    }
+  </div>
   <p class="subject">{{ lesson().subject }}</p>
-  <p class="meta">
-    <span class="kind kind--{{ lesson().kind }}">{{ kindLabels[lesson().kind] }}</span>
-    <span>ауд. {{ lesson().room }}</span>
-    <span>{{ lesson().teacher }}</span>
-  </p>
-  @if (status() === 'current') {
-    <span class="now">Идёт сейчас</span>
-  }
+  <div class="meta">
+    <span class="room">
+      <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 14s4.5-4.2 4.5-7.5a4.5 4.5 0 0 0-9 0C3.5 9.8 8 14 8 14z" /><circle cx="8" cy="6.5" r="1.5" /></svg>
+      <span class="visually-hidden">Аудитория</span>
+      <span class="mono">{{ lesson().room }}</span>
+    </span>
+    <app-copy-button [value]="lesson().teacher" label="Скопировать ФИО преподавателя: {{ lesson().teacher }}">
+      {{ lesson().teacher }}
+    </app-copy-button>
+    @if (safeLink(); as link) {
+      <span class="online">
+        <a [href]="link" target="_blank" rel="noopener noreferrer">Онлайн</a>
+        <app-copy-button [value]="link" label="Скопировать ссылку на онлайн-занятие" />
+      </span>
+    }
+  </div>
 </div>

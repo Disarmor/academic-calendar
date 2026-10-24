@@ -1,5 +1,5 @@
 import { CalendarEvent, LocalDate, WeekType } from '../../models/academic-calendar';
-import { Lesson, LessonStatus, Schedule, Weekday } from '../../models/schedule';
+import { Lesson, LessonStatus, Schedule, SubjectColor, Weekday } from '../../models/schedule';
 import { isoWeekday, parseTime, ZonedDateTime } from '../time/local-date';
 
 export interface ScheduleDay {
@@ -23,6 +23,11 @@ const STUDY_DAYS: readonly Weekday[] = [1, 2, 3, 4, 5, 6];
 
 function byStartTime(a: Lesson, b: Lesson): number {
   return parseTime(a.start) - parseTime(b.start);
+}
+
+/** Название предмета → цветовая метка. */
+export function subjectColorMap(schedule: Schedule): Readonly<Record<string, SubjectColor>> {
+  return Object.fromEntries(schedule.subjects.map((subject) => [subject.name, subject.color]));
 }
 
 export function isScheduleActive(schedule: Schedule, date: LocalDate): boolean {

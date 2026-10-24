@@ -1,50 +1,104 @@
-:root {
-  color-scheme: light dark;
+// Дизайн-токены. Описание стиля и правила — в разделе «Дизайн» CLAUDE.md.
 
-  --bg: #f4f5f7;
+:root {
+  color-scheme: light;
+
+  --font-sans: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+
+  --bg: #f8f9fa;
   --surface: #ffffff;
-  --surface-muted: #f0f1f4;
-  --text: #1b1f27;
-  --text-muted: #5b6372;
-  --accent: #2f6fed;
-  --accent-soft: #e6eefe;
+  --surface-muted: #f1f3f5;
+  --border: #e3e6ea;
+  --border-strong: #cfd4da;
+  --text: #1a1d23;
+  --text-muted: #5f6670;
+
+  --accent: #0052cc;
+  --accent-hover: #0047b3;
+  --accent-soft: #e8f0fc;
   --on-accent: #ffffff;
-  --numerator: #2f6fed;
-  --denominator: #b4479a;
-  --kind-lecture: #2f6fed;
-  --kind-practice: #18865b;
-  --kind-lab: #b4479a;
-  --success: #18865b;
-  --success-soft: #e3f4ec;
-  --warning: #9a5b00;
-  --warning-soft: #fdf0dc;
-  --danger: #c0392b;
-  --radius: 14px;
-  --radius-sm: 10px;
-  --shadow: 0 1px 2px rgb(16 24 40 / 8%), 0 1px 3px rgb(16 24 40 / 6%);
+
+  --numerator-bg: #0052cc;
+  --denominator-bg: #2b2e37;
+  --on-week: #ffffff;
+
+  --success: #237a4b;
+  --success-soft: #e6f4ec;
+  --note: #9a5b00;
+  --note-soft: #fff6e2;
+  --note-border: #f2d49b;
+  --danger: #c0352b;
+  --danger-soft: #fdecea;
+
+  --kind-lecture: #237a4b;
+  --kind-lecture-soft: #e6f4ec;
+  --kind-practice: #0052cc;
+  --kind-practice-soft: #e8f0fc;
+  --kind-lab: #b45309;
+  --kind-lab-soft: #fdf0e1;
+
+  --subject-cyan: #0891b2;
+  --subject-amber: #d97706;
+  --subject-violet: #7c3aed;
+  --subject-rose: #e11d48;
+  --subject-teal: #0d9488;
+  --subject-indigo: #4f46e5;
+  --subject-lime: #65a30d;
+  --subject-slate: #64748b;
+
+  --radius: 10px;
+  --radius-sm: 6px;
+  --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+}
+
+@mixin dark-tokens {
+  color-scheme: dark;
+
+  --bg: #1e1e24;
+  --surface: #25252c;
+  --surface-muted: #2c2c35;
+  --border: #36363f;
+  --border-strong: #46464f;
+  --text: #ebecf0;
+  --text-muted: #a2a5ae;
+
+  --accent: #5b9bff;
+  --accent-hover: #7aaeff;
+  --accent-soft: #22314d;
+  --on-accent: #0b1220;
+
+  --numerator-bg: #0052cc;
+  --denominator-bg: #3a3c47;
+
+  --success: #5fcf92;
+  --success-soft: #1d3428;
+  --note: #f2b35b;
+  --note-soft: #33291a;
+  --note-border: #5a4524;
+  --danger: #ff8a7f;
+  --danger-soft: #3b2224;
+
+  --kind-lecture: #5fcf92;
+  --kind-lecture-soft: #1d3428;
+  --kind-practice: #7aaeff;
+  --kind-practice-soft: #22314d;
+  --kind-lab: #f5a35c;
+  --kind-lab-soft: #3a2a1b;
+
+  --subject-cyan: #22d3ee;
+  --subject-amber: #fbbf24;
+  --subject-violet: #a78bfa;
+  --subject-rose: #fb7185;
+  --subject-teal: #2dd4bf;
+  --subject-indigo: #818cf8;
+  --subject-lime: #a3e635;
+  --subject-slate: #94a3b8;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #12141a;
-    --surface: #1b1e26;
-    --surface-muted: #252935;
-    --text: #e8eaf0;
-    --text-muted: #9aa2b2;
-    --accent: #6b9bff;
-    --accent-soft: #1f2c4a;
-    --on-accent: #0b1020;
-    --numerator: #6b9bff;
-    --denominator: #e27bcb;
-    --kind-lecture: #6b9bff;
-    --kind-practice: #4cc993;
-    --kind-lab: #e27bcb;
-    --success: #4cc993;
-    --success-soft: #173328;
-    --warning: #f0b45a;
-    --warning-soft: #3a2c14;
-    --danger: #ff7b6e;
-    --shadow: 0 1px 2px rgb(0 0 0 / 40%);
+    @include dark-tokens;
   }
 }
 
@@ -54,11 +108,22 @@
   box-sizing: border-box;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--font-sans);
   font-size: 1rem;
   line-height: 1.5;
+  font-feature-settings: 'cv11', 'ss01';
   color: var(--text);
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
@@ -67,27 +132,70 @@ body {
 h1,
 h2,
 h3 {
+  margin: 0;
   line-height: 1.25;
+  letter-spacing: -0.01em;
 }
 
-h2 {
-  margin: 0 0 0.75rem;
-  font-size: 1.125rem;
+a {
+  color: var(--accent);
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
 .container {
   width: 100%;
-  max-width: 60rem;
+  max-width: 72rem;
   margin: 0 auto;
   padding: 0 1rem;
 }
 
 .card {
   display: block;
-  padding: 1.25rem;
+  padding: 1rem;
+  border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--surface);
-  box-shadow: var(--shadow);
+
+  @media (min-width: 40rem) {
+    padding: 1.25rem;
+  }
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.875rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.0625rem 0.5rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.empty {
+  margin: 0;
+  color: var(--text-muted);
 }
 
 .visually-hidden {

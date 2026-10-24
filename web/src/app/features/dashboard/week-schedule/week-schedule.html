@@ -1,36 +1,42 @@
-<section class="card" aria-labelledby="week-schedule-title">
-  <header class="head">
-    <div>
-      <h2 id="week-schedule-title">Расписание на неделю</h2>
-      <p class="subtitle">{{ schedule().title }}</p>
-    </div>
-    <div class="toggle" role="group" aria-label="Тип недели">
+<details class="card week">
+  <summary class="summary">
+    <span class="card-title">Расписание на неделю</span>
+    <span class="hint">{{ schedule().title }}</span>
+    <svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" /></svg>
+  </summary>
+
+  <div class="content">
+    <div class="toggle" role="group" aria-label="Показать неделю">
       @for (type of weekTypes; track type) {
         <button type="button" [attr.aria-pressed]="selectedWeekType() === type" (click)="selectedWeekType.set(type)">
           {{ weekTypeLabels[type] }}
           @if (type === currentWeekType()) {
-            <span class="current-mark" aria-hidden="true">•</span>
+            <span class="current-mark" aria-hidden="true"></span>
             <span class="visually-hidden">(текущая неделя)</span>
           }
         </button>
       }
     </div>
-  </header>
 
-  @for (day of days(); track day.weekday) {
-    @let isToday = isCurrentWeekSelected() && day.weekday === todayWeekday();
-    <h3 class="day" [class.today]="isToday">
-      {{ weekdayLabels[day.weekday] }}
-      @if (isToday) {
-        <span class="today-mark">сегодня</span>
-      }
-    </h3>
-    <ul class="list">
-      @for (lesson of day.lessons; track lesson.start + lesson.subject) {
-        <li>
-          <app-lesson-item [lesson]="lesson" [durationMinutes]="schedule().lessonDurationMinutes" />
-        </li>
-      }
-    </ul>
-  }
-</section>
+    @for (day of days(); track day.weekday) {
+      @let isToday = isCurrentWeekSelected() && day.weekday === todayWeekday();
+      <h3 class="day" [class.today]="isToday">
+        {{ weekdayLabels[day.weekday] }}
+        @if (isToday) {
+          <span class="tag today-tag">сегодня</span>
+        }
+      </h3>
+      <ul class="list">
+        @for (lesson of day.lessons; track lesson.start + lesson.subject) {
+          <li>
+            <app-lesson-item
+              [lesson]="lesson"
+              [color]="subjectColors()[lesson.subject]"
+              [durationMinutes]="schedule().lessonDurationMinutes"
+            />
+          </li>
+        }
+      </ul>
+    }
+  </div>
+</details>
