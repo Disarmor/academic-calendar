@@ -16,11 +16,13 @@
     />
   </div>
 } @else {
-  @let saving = editor.phase() === 'saving';
+  @let phase = editor.phase();
   <div class="toolbar card" role="region" aria-label="Публикация">
     <p class="status" aria-live="polite">
-      @if (saving) {
+      @if (phase === 'saving') {
         Публикуем…
+      } @else if (phase === 'reloading') {
+        Загружаем объявления с GitHub…
       } @else if (editor.isDirty()) {
         <span class="dot dot--dirty" aria-hidden="true"></span> Есть неопубликованные изменения
       } @else if (editor.justPublished()) {
@@ -30,14 +32,22 @@
       }
     </p>
     <div class="buttons">
-      <button class="button button--primary" type="button" [disabled]="!editor.isDirty() || saving" (click)="editor.publish()">
+      <button class="button button--primary" type="button" [disabled]="!editor.isDirty() || busy()" (click)="editor.publish()">
         Опубликовать
       </button>
-      <button class="button" type="button" [disabled]="!editor.isDirty() || saving" (click)="discard()">
+      <button class="button" type="button" [disabled]="!editor.isDirty() || busy()" (click)="discard()">
         Отменить правки
       </button>
-      <button class="button" type="button" [disabled]="saving" (click)="reload()">Загрузить заново</button>
-      <button class="button" type="button" [disabled]="saving" (click)="signOut()">Выйти</button>
+      <button
+        class="button"
+        type="button"
+        title="Скачать актуальные объявления с GitHub, например после правок с другого устройства"
+        [disabled]="busy()"
+        (click)="reload()"
+      >
+        Загрузить заново
+      </button>
+      <button class="button" type="button" [disabled]="busy()" (click)="signOut()">Выйти</button>
     </div>
     @if (editor.error(); as message) {
       <p class="error" role="alert">{{ message }}</p>

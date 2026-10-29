@@ -43,6 +43,20 @@ describe('AnnouncementsEditor', () => {
     expect(editor.justPublished()).toBe(true);
   });
 
+  it('при повторной загрузке остаётся в редакторе и сбрасывает черновик к версии с GitHub', async () => {
+    const { editor } = setup();
+    await editor.signIn('token');
+    editor.save({ title: 'Черновик', text: 'Текст', date: '2026-10-20' });
+
+    const reloading = editor.load();
+    expect(editor.phase()).toBe('reloading');
+    await reloading;
+
+    expect(editor.phase()).toBe('ready');
+    expect(editor.items().map((item) => item.announcement.title)).toEqual(['Старое']);
+    expect(editor.isDirty()).toBe(false);
+  });
+
   it('не принимает некорректное объявление', async () => {
     const { editor } = setup();
     await editor.signIn('token');

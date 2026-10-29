@@ -14,7 +14,8 @@ import {
 
 const COMMIT_MESSAGE = 'Объявления: обновлены через страницу старосты';
 
-export type EditorPhase = 'signed-out' | 'loading' | 'ready' | 'saving';
+/** `loading` — вход по токену, `reloading` — повторная загрузка уже открытого редактора. */
+export type EditorPhase = 'signed-out' | 'loading' | 'ready' | 'reloading' | 'saving';
 
 interface DraftEntry {
   /** Локальный ключ записи, чтобы отличать объявления с одинаковым заголовком. */
@@ -78,7 +79,8 @@ export class AnnouncementsEditor {
   /** Загружает объявления с GitHub; несохранённые правки при этом теряются. */
   async load(): Promise<void> {
     const wasReady = this.phase() === 'ready';
-    this.phase.set('loading');
+    // При повторной загрузке редактор остаётся на экране, форма входа не мелькает.
+    this.phase.set(wasReady ? 'reloading' : 'loading');
     this.error.set(null);
     try {
       const file = await this.github.read(ANNOUNCEMENTS_FILE_PATH, this.token);

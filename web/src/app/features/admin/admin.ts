@@ -27,7 +27,12 @@ export class Admin {
   );
   protected readonly signedIn = computed(() => {
     const phase = this.editor.phase();
-    return phase === 'ready' || phase === 'saving';
+    return phase === 'ready' || phase === 'reloading' || phase === 'saving';
+  });
+  /** Идёт запрос к GitHub: кнопки редактора недоступны. */
+  protected readonly busy = computed(() => {
+    const phase = this.editor.phase();
+    return phase === 'reloading' || phase === 'saving';
   });
 
   protected save(event: AnnouncementSave): void {
@@ -48,6 +53,9 @@ export class Admin {
   }
 
   protected reload(): void {
+    if (this.editor.isDirty() && !confirm('Неопубликованные правки пропадут. Загрузить объявления с GitHub заново?')) {
+      return;
+    }
     this.editingKey.set(undefined);
     void this.editor.load();
   }
