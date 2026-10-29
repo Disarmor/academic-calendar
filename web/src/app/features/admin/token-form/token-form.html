@@ -5,7 +5,7 @@
     Он хранится только в этой вкладке и стирается при её закрытии или перезагрузке.
   </p>
 
-  <form class="form" (ngSubmit)="submit()">
+  <form class="form" [formGroup]="form" (ngSubmit)="submit()">
     <label class="field">
       <span class="label">Токен GitHub</span>
       <input
@@ -14,10 +14,10 @@
         autocomplete="off"
         spellcheck="false"
         placeholder="github_pat_…"
-        [formControl]="token"
+        formControlName="token"
       />
     </label>
-    <button class="button button--primary" type="submit" [disabled]="busy() || token.invalid">
+    <button class="button button--primary" type="submit" [disabled]="busy() || form.invalid">
       {{ busy() ? 'Проверяем…' : 'Войти' }}
     </button>
   </form>
@@ -34,7 +34,10 @@
         GitHub.
       </li>
       <li>Repository access: <b>Only select repositories</b> → <span class="mono">academic-calendar</span>.</li>
-      <li>Permissions → Repository permissions → <b>Contents: Read and write</b>. Остальные права не нужны.</li>
+      <li>
+        Permissions → <b>Add permissions</b> → <b>Contents</b>, доступ <b>Read and write</b>. GitHub сам добавит Metadata:
+        Read-only. Остальные права не нужны.
+      </li>
       <li>Срок действия — например, 90 дней. Скопируйте токен и сохраните в менеджере паролей.</li>
       <li>Если токен утёк, удалите его на той же странице GitHub — он сразу перестанет работать.</li>
     </ol>

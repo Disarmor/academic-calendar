@@ -1,5 +1,5 @@
 import { Component, input, output } from '@angular/core';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GITHUB_NEW_TOKEN_URL } from '../../../core/github/github-utils';
 
 @Component({
@@ -13,13 +13,17 @@ export class TokenForm {
   readonly error = input<string | null>(null);
   readonly submitted = output<string>();
 
-  protected readonly token = new FormControl('', { nonNullable: true, validators: Validators.required });
+  // [formGroup] на <form> обязателен: без него Angular не перехватывает отправку,
+  // браузер шлёт форму сам, и CSP (form-action 'none') её блокирует.
+  protected readonly form = new FormGroup({
+    token: new FormControl('', { nonNullable: true, validators: Validators.required }),
+  });
   protected readonly newTokenUrl = GITHUB_NEW_TOKEN_URL;
 
   protected submit(): void {
-    if (this.token.valid) {
-      this.submitted.emit(this.token.value);
-      this.token.reset();
+    if (this.form.valid) {
+      this.submitted.emit(this.form.controls.token.value);
+      this.form.reset();
     }
   }
 }
