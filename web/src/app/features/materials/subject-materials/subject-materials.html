@@ -1,5 +1,11 @@
 @let subject = view();
-<details class="card subject subject--{{ subject.color ?? 'slate' }}" [attr.id]="subject.id ?? null" [open]="open()">
+<!-- Общий name делает карточки «гармошкой»: при раскрытии одной браузер закрывает остальные. -->
+<details
+  class="card subject subject--{{ subject.color ?? 'slate' }}"
+  name="subject-materials"
+  [attr.id]="subject.id ?? null"
+  [open]="open()"
+>
   <summary class="summary">
     <h3 class="name">{{ subject.subject }}</h3>
     <span class="count mono">
