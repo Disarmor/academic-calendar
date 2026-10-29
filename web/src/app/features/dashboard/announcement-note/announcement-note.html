@@ -1,0 +1,18 @@
+<div class="note-head">
+  <h3 class="note-title">{{ note().title }}</h3>
+  @if (note().pinned && !archived()) {
+    <span class="tag pin">Важно</span>
+  }
+</div>
+<p class="note-text" [class.note-text--clamped]="clamped()">{{ note().text }}</p>
+<div class="note-foot">
+  <p class="note-date mono">
+    <time [attr.datetime]="note().date">{{ note().date | date: 'dd.MM.yyyy' }}</time>
+  </p>
+  @if (clamped()) {
+    <button type="button" class="more" (click)="expand.emit()">
+      Показать полностью
+      <span class="visually-hidden">: {{ note().title }}</span>
+    </button>
+  }
+</div>

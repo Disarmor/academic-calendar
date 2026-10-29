@@ -1,0 +1,38 @@
+<!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
+<dialog #dialog class="dialog" aria-labelledby="announcements-dialog-title" (click)="onBackdropClick($event)">
+  <div class="dialog-body">
+    <header class="dialog-head">
+      <h2 class="card-title dialog-title" id="announcements-dialog-title">
+        <span class="marker" aria-hidden="true"></span>
+        Объявления старосты
+      </h2>
+      <button type="button" class="close" aria-label="Закрыть" (click)="close()">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" /></svg>
+      </button>
+    </header>
+
+    <ul class="notes">
+      @for (note of announcements(); track note.date + note.title) {
+        <li #item tabindex="-1" class="item">
+          <app-announcement-note [note]="note" />
+        </li>
+      } @empty {
+        <li class="empty">Новых объявлений нет.</li>
+      }
+    </ul>
+
+    @if (archive().length > 0) {
+      <section class="archive" aria-labelledby="announcements-archive-title">
+        <h3 #archiveTitle tabindex="-1" class="card-title archive-title" id="announcements-archive-title">
+          Архив объявлений
+          <span class="archive-count mono">{{ archive().length }}</span>
+        </h3>
+        <ul class="notes">
+          @for (note of archive(); track note.date + note.title) {
+            <li><app-announcement-note [note]="note" [archived]="true" /></li>
+          }
+        </ul>
+      </section>
+    }
+  </div>
+</dialog>

@@ -1,0 +1,81 @@
+:host {
+  display: block;
+  padding: 0.75rem 0.875rem;
+  border: 1px solid var(--note-border);
+  border-radius: var(--radius-sm);
+  background: var(--note-soft);
+}
+
+:host(.pinned) {
+  border-left: 3px solid var(--note);
+}
+
+// Архивные заметки приглушены, чтобы не путать их с актуальными.
+:host(.archived) {
+  border-color: var(--border);
+  background: var(--surface-muted);
+}
+
+.note-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.note-title {
+  font-size: 0.9375rem;
+  font-weight: 650;
+}
+
+.pin {
+  color: var(--note);
+  background: var(--surface);
+}
+
+.note-text {
+  margin: 0.25rem 0 0;
+  font-size: 0.875rem;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+// Число строк совпадает с ANNOUNCEMENT_PREVIEW_LINES в announcements-utils.ts.
+.note-text--clamped {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 6;
+  line-clamp: 6;
+}
+
+.note-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.note-date {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.more {
+  padding: 0.125rem 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: none;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

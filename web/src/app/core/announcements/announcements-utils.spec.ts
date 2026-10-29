@@ -3,6 +3,7 @@ import {
   announcementErrors,
   announcementStatus,
   archivedAnnouncements,
+  isLongAnnouncement,
   parseAnnouncementsFile,
   serializeAnnouncements,
   visibleAnnouncements,
@@ -104,5 +105,17 @@ describe('parseAnnouncementsFile', () => {
     expect(() => parseAnnouncementsFile('{')).toThrow('это не JSON');
     expect(() => parseAnnouncementsFile('{"announcements":[{"title":1}]}')).toThrow('неверная структура');
     expect(() => parseAnnouncementsFile('null')).toThrow('неверная структура');
+  });
+});
+
+describe('isLongAnnouncement', () => {
+  it('короткий текст помещается в превью', () => {
+    expect(isLongAnnouncement('Пара переносится на 18:00.')).toBe(false);
+    expect(isLongAnnouncement('1\n2\n3\n4\n5\n6')).toBe(false);
+  });
+
+  it('много строк или длинный абзац не помещаются', () => {
+    expect(isLongAnnouncement('1\n2\n3\n4\n5\n6\n7')).toBe(true);
+    expect(isLongAnnouncement('слово '.repeat(60))).toBe(true);
   });
 });

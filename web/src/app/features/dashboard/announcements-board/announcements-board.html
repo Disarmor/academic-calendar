@@ -1,50 +1,36 @@
 <section class="card board" aria-labelledby="announcements-title">
   <h2 class="card-title" id="announcements-title">
-    <span class="marker" aria-hidden="true"></span>
-    Объявления старосты
+    @if (hasError()) {
+      <span class="marker" aria-hidden="true"></span>
+      Объявления старосты
+    } @else {
+      <button type="button" class="title-button" aria-haspopup="dialog" (click)="openDialog()">
+        <span class="marker" aria-hidden="true"></span>
+        Объявления старосты
+        <svg class="open-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 4l4 4-4 4" /></svg>
+      </button>
+    }
   </h2>
 
   @if (hasError()) {
     <p class="empty" role="alert">Не удалось загрузить объявления.</p>
   } @else {
     <ul class="notes">
-      @for (note of announcements(); track note.date + note.title) {
-        <li class="note" [class.pinned]="note.pinned">
-          <div class="note-head">
-            <h3 class="note-title">{{ note.title }}</h3>
-            @if (note.pinned) {
-              <span class="tag pin">Важно</span>
-            }
-          </div>
-          <p class="note-text">{{ note.text }}</p>
-          <p class="note-date mono">
-            <time [attr.datetime]="note.date">{{ note.date | date: 'dd.MM.yyyy' }}</time>
-          </p>
-        </li>
+      @for (note of announcements(); track note.date + note.title; let i = $index) {
+        <li><app-announcement-note [note]="note" [preview]="true" (expand)="openDialog(i)" /></li>
       } @empty {
         <li class="empty">Новых объявлений нет.</li>
       }
     </ul>
 
     @if (archive().length > 0) {
-      <details class="archive">
-        <summary class="archive-summary">
-          Архив объявлений
-          <span class="archive-count mono">{{ archive().length }}</span>
-          <svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" /></svg>
-        </summary>
-        <ul class="notes archive-list">
-          @for (note of archive(); track note.date + note.title) {
-            <li class="note note--archived">
-              <h3 class="note-title">{{ note.title }}</h3>
-              <p class="note-text">{{ note.text }}</p>
-              <p class="note-date mono">
-                <time [attr.datetime]="note.date">{{ note.date | date: 'dd.MM.yyyy' }}</time>
-              </p>
-            </li>
-          }
-        </ul>
-      </details>
+      <button type="button" class="archive-button" aria-haspopup="dialog" (click)="openDialog('archive')">
+        Архив объявлений
+        <span class="archive-count mono">{{ archive().length }}</span>
+        <svg class="open-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 4l4 4-4 4" /></svg>
+      </button>
     }
+
+    <app-announcements-dialog [announcements]="announcements()" [archive]="archive()" />
   }
 </section>

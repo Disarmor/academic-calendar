@@ -25,6 +25,23 @@ export function archivedAnnouncements(announcements: readonly Announcement[], to
     .sort((a, b) => b.date.localeCompare(a.date));
 }
 
+/** Сколько строк текста объявления видно на доске до «Показать полностью». */
+export const ANNOUNCEMENT_PREVIEW_LINES = 6;
+/** Примерная длина строки на доске в символах (сайдбар 22rem). */
+const PREVIEW_LINE_CHARS = 40;
+
+/**
+ * Не помещается ли текст в превью на доске. Каждая строка текста занимает
+ * не меньше одной строки на экране, длинная строка переносится.
+ */
+export function isLongAnnouncement(text: string): boolean {
+  const lines = text
+    .trim()
+    .split('\n')
+    .reduce((sum, line) => sum + Math.max(1, Math.ceil(line.length / PREVIEW_LINE_CHARS)), 0);
+  return lines > ANNOUNCEMENT_PREVIEW_LINES;
+}
+
 export function announcementStatus(item: Announcement, today: LocalDate): AnnouncementStatus {
   if (today < item.date) {
     return 'scheduled';

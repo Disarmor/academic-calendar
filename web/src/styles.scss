@@ -50,6 +50,7 @@
   --radius: 10px;
   --radius-sm: 6px;
   --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+  --backdrop: rgb(15 17 22 / 0.55);
 }
 
 @mixin dark-tokens {
@@ -144,6 +145,15 @@ a {
 :focus-visible {
   outline: none;
   box-shadow: var(--focus-ring);
+}
+
+// Пока открыто модальное окно, страница под ним не прокручивается.
+html {
+  scrollbar-gutter: stable;
+}
+
+html:has(dialog[open]) {
+  overflow: hidden;
 }
 
 .container {
