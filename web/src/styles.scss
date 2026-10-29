@@ -250,8 +250,13 @@ html:has(dialog[open]) {
   }
 }
 
+// Поле растёт вместе с текстом, но не выше 70% экрана, чтобы кнопки
+// под ним оставались видны. Где field-sizing не поддерживается (старые
+// браузеры), поле остаётся фиксированной высоты и тянется вручную.
 textarea.input {
+  field-sizing: content;
   min-height: 8rem;
+  max-height: 70dvh;
   resize: vertical;
   line-height: 1.45;
 }
