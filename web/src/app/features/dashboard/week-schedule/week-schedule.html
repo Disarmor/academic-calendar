@@ -31,7 +31,7 @@
           <li>
             <app-lesson-item
               [lesson]="lesson"
-              [color]="subjectColors()[lesson.subject]"
+              [subject]="subjects()[lesson.subject]"
               [durationMinutes]="schedule().lessonDurationMinutes"
             />
           </li>

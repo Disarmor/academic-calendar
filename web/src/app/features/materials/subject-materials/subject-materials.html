@@ -1,10 +1,10 @@
 @let subject = view();
-<details class="card subject subject--{{ subject.color ?? 'slate' }}">
+<details class="card subject subject--{{ subject.color ?? 'slate' }}" [attr.id]="subject.id ?? null" [open]="open()">
   <summary class="summary">
     <h3 class="name">{{ subject.subject }}</h3>
     <span class="count mono">
       <span class="visually-hidden">Файлов:</span>
-      {{ subject.items.length }}
+      {{ subject.count }}
     </span>
     <svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" /></svg>
   </summary>
@@ -16,6 +16,16 @@
         <p class="task-text">{{ subject.task }}</p>
       </section>
     }
-    <app-material-list [items]="subject.items" />
+    @for (section of subject.sections; track section.id) {
+      <section class="section" [attr.aria-label]="sectionLabels[section.id] + ': ' + subject.subject">
+        <h4 class="section-title">
+          {{ sectionLabels[section.id] }}
+          <span class="section-count mono">{{ section.items.length }}</span>
+        </h4>
+        <app-material-list [items]="section.items" />
+      </section>
+    } @empty {
+      <p class="empty">Материалов пока нет.</p>
+    }
   </div>
 </details>

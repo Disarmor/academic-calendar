@@ -2,7 +2,7 @@ import { computed, inject, Service } from '@angular/core';
 import { CalendarState } from '../calendar/calendar-state';
 import { AcademicData } from '../data/academic-data';
 import { Clock } from '../time/clock';
-import { buildTodayPlan, subjectColorMap, TodayPlan } from './schedule-utils';
+import { buildTodayPlan, subjectMap, TodayPlan } from './schedule-utils';
 
 /** Расписание группы и план занятий на сегодня. */
 @Service()
@@ -13,9 +13,9 @@ export class ScheduleState {
 
   readonly schedule = computed(() => (this.resource.hasValue() ? this.resource.value() : undefined));
 
-  readonly subjectColors = computed(() => {
+  readonly subjects = computed(() => {
     const schedule = this.schedule();
-    return schedule ? subjectColorMap(schedule) : {};
+    return schedule ? subjectMap(schedule) : {};
   });
 
   readonly todayPlan = computed<TodayPlan | undefined>(() => {

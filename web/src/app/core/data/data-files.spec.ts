@@ -79,13 +79,25 @@ describe('public/data', () => {
     }
   });
 
-  it('materials.json: предметы из расписания, без повторов', () => {
-    const subjectNames = new Set(schedule.subjects.map((subject) => subject.name));
+  it('schedule.json: уникальные латинские коды предметов', () => {
+    const ids = schedule.subjects.map((subject) => subject.id);
+    for (const id of ids) {
+      expect(id).toMatch(/^[a-z0-9-]+$/);
+    }
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('materials.json: предметы из расписания, без повторов, файлы в папке предмета', () => {
+    const subjectsByName = new Map(schedule.subjects.map((subject) => [subject.name, subject]));
     const seen = new Set<string>();
     for (const entry of materials.subjects) {
-      expect(subjectNames.has(entry.subject), entry.subject).toBe(true);
+      const subject = subjectsByName.get(entry.subject);
+      expect(subject, entry.subject).toBeDefined();
       expect(seen.has(entry.subject), entry.subject).toBe(false);
       seen.add(entry.subject);
+      for (const file of entry.files) {
+        expect(file.path.startsWith(`files/${subject?.id}/`), file.path).toBe(true);
+      }
     }
   });
 

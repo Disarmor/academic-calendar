@@ -3,6 +3,9 @@ import { LessonKind } from './schedule';
 /** Вид материала: как у занятий, плюс учебники и рабочие программы. */
 export type MaterialKind = LessonKind | 'textbook' | 'program';
 
+/** Раздел на странице: лекционные (лекции, учебники, программа) и практические (практики, лабораторные). */
+export type MaterialSectionId = 'lectures' | 'practice';
+
 export interface MaterialLink {
   readonly title: string;
   /** Путь к файлу внутри `public/`, например `files/poe/lekciya-1.docx`. */

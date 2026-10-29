@@ -1,5 +1,5 @@
-import { MaterialFile, MaterialKind, MaterialLink, MaterialsFile } from '../../models/materials';
-import { SubjectColor } from '../../models/schedule';
+import { MaterialFile, MaterialKind, MaterialLink, MaterialSectionId, MaterialsFile } from '../../models/materials';
+import { Subject, SubjectColor } from '../../models/schedule';
 
 /** Файл, подготовленный к показу: ссылка, формат и размер. */
 export interface MaterialItem {
@@ -15,14 +15,27 @@ export interface MaterialItem {
   readonly download: string | null;
 }
 
-export interface SubjectMaterialsView {
-  readonly subject: string;
-  readonly color?: SubjectColor;
-  readonly task?: string;
+export interface MaterialSection {
+  readonly id: MaterialSectionId;
   readonly items: readonly MaterialItem[];
 }
 
-const KIND_ORDER: readonly MaterialKind[] = ['lecture', 'practice', 'lab', 'textbook', 'program'];
+export interface SubjectMaterialsView {
+  /** Код предмета из расписания, он же якорь `#id` на странице. */
+  readonly id?: string;
+  readonly subject: string;
+  readonly color?: SubjectColor;
+  readonly task?: string;
+  readonly count: number;
+  /** Только непустые разделы. */
+  readonly sections: readonly MaterialSection[];
+}
+
+/** Какие виды попадают в раздел; порядок видов задаёт порядок файлов внутри раздела. */
+const SECTION_KINDS: Readonly<Record<MaterialSectionId, readonly MaterialKind[]>> = {
+  lectures: ['lecture', 'textbook', 'program'],
+  practice: ['practice', 'lab'],
+};
 const UNITS = ['Б', 'КБ', 'МБ', 'ГБ'];
 const FORBIDDEN_FILENAME_CHARS = /[\\/:*?"<>|]/g;
 
@@ -61,15 +74,29 @@ function safeFilename(title: string): string {
   return title.replace(FORBIDDEN_FILENAME_CHARS, ' ').replace(/\s+/g, ' ').trim();
 }
 
+/** Файлы предмета по разделам «лекционные» и «практические»; пустые разделы пропускаются. */
+export function splitIntoSections(files: readonly MaterialFile[]): MaterialSection[] {
+  return (Object.keys(SECTION_KINDS) as MaterialSectionId[])
+    .map((id) => {
+      const kinds = SECTION_KINDS[id];
+      const items = files
+        .filter((file) => kinds.includes(file.kind))
+        .sort((a, b) => kinds.indexOf(a.kind) - kinds.indexOf(b.kind))
+        .map(toMaterialItem);
+      return { id, items };
+    })
+    .filter((section) => section.items.length > 0);
+}
+
 /**
  * Материалы по предметам в порядке расписания; предметы, которых нет в расписании, идут в конце.
- * Внутри предмета файлы сгруппированы по виду, порядок внутри вида — как в данных.
+ * Внутри предмета файлы разбиты на разделы и сгруппированы по виду, порядок внутри вида — как в данных.
  */
 export function buildSubjectMaterials(
   data: MaterialsFile,
-  subjectColors: Readonly<Record<string, SubjectColor>>,
+  subjects: Readonly<Record<string, Subject>>,
 ): SubjectMaterialsView[] {
-  const subjectOrder = Object.keys(subjectColors);
+  const subjectOrder = Object.keys(subjects);
   const position = (subject: string): number => {
     const index = subjectOrder.indexOf(subject);
     return index === -1 ? subjectOrder.length : index;
@@ -77,11 +104,11 @@ export function buildSubjectMaterials(
   return [...data.subjects]
     .sort((a, b) => position(a.subject) - position(b.subject))
     .map((entry) => ({
+      id: subjects[entry.subject]?.id,
       subject: entry.subject,
-      color: subjectColors[entry.subject],
+      color: subjects[entry.subject]?.color,
       task: entry.task,
-      items: [...entry.files]
-        .sort((a, b) => KIND_ORDER.indexOf(a.kind) - KIND_ORDER.indexOf(b.kind))
-        .map(toMaterialItem),
+      count: entry.files.length,
+      sections: splitIntoSections(entry.files),
     }));
 }

@@ -16,7 +16,7 @@ export class MaterialsState {
   readonly templates = computed(() => (this.resource.hasValue() ? this.resource.value().templates.map(toMaterialItem) : []));
 
   readonly subjects = computed(() =>
-    this.resource.hasValue() ? buildSubjectMaterials(this.resource.value(), this.scheduleState.subjectColors()) : [],
+    this.resource.hasValue() ? buildSubjectMaterials(this.resource.value(), this.scheduleState.subjects()) : [],
   );
 
   constructor() {

@@ -12,6 +12,8 @@ export type LessonWeek = WeekType | 'both';
 export type SubjectColor = 'cyan' | 'amber' | 'violet' | 'rose' | 'teal' | 'indigo' | 'lime' | 'slate';
 
 export interface Subject {
+  /** Латинский код: якорь на странице материалов и папка в `public/files/`. */
+  readonly id: string;
   readonly name: string;
   readonly color: SubjectColor;
 }

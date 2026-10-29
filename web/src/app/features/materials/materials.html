@@ -23,7 +23,7 @@
 
     <div class="main">
       @for (subject of materials.subjects(); track subject.subject) {
-        <app-subject-materials [view]="subject" />
+        <app-subject-materials [view]="subject" [open]="subject.id !== undefined && subject.id === fragment()" />
       } @empty {
         <p class="state">Материалов пока нет.</p>
       }

@@ -19,6 +19,13 @@
     <app-copy-button [value]="lesson().teacher" label="Скопировать ФИО преподавателя: {{ lesson().teacher }}">
       {{ lesson().teacher }}
     </app-copy-button>
+    @if (subject(); as current) {
+      <a class="materials" routerLink="/materials" [fragment]="current.id">
+        <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h6.5L13 6v7.5H3zM9.5 2.5V6H13M5.5 9h5M5.5 11.5h3" /></svg>
+        Материалы
+        <span class="visually-hidden">по предмету «{{ lesson().subject }}»</span>
+      </a>
+    }
     @if (safeLink(); as link) {
       <span class="online">
         <a [href]="link" target="_blank" rel="noopener noreferrer">Онлайн</a>

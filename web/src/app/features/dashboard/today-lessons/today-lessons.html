@@ -14,7 +14,7 @@
           <app-lesson-item
             [lesson]="item.lesson"
             [status]="item.status"
-            [color]="subjectColors()[item.lesson.subject]"
+            [subject]="subjects()[item.lesson.subject]"
             [durationMinutes]="durationMinutes()"
           />
         </li>

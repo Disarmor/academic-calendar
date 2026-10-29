@@ -85,6 +85,21 @@
   color: var(--text-muted);
 }
 
+.materials {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin: -0.125rem -0.25rem;
+  padding: 0.125rem 0.25rem;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  text-decoration: none;
+
+  &:hover {
+    background: var(--accent-soft);
+  }
+}
+
 .room,
 .online {
   display: inline-flex;

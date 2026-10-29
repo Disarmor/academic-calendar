@@ -2,6 +2,7 @@
   --subject-color: var(--subject-slate);
 
   border-left: 3px solid var(--subject-color);
+  scroll-margin-top: 1rem;
 }
 
 .subject--cyan {
@@ -87,6 +88,30 @@
   display: grid;
   gap: 1rem;
   padding-top: 1rem;
+}
+
+.section {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.section-count {
+  padding: 0 0.375rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  letter-spacing: 0;
+  background: var(--surface-muted);
 }
 
 // Задание передаёт староста, поэтому оформлено как его заметка.

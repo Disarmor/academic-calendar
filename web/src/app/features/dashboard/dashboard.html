@@ -24,11 +24,11 @@
         <app-today-lessons
           [plan]="todayPlan"
           [durationMinutes]="schedule.lessonDurationMinutes"
-          [subjectColors]="scheduleState.subjectColors()"
+          [subjects]="scheduleState.subjects()"
         />
         <app-week-schedule
           [schedule]="schedule"
-          [subjectColors]="scheduleState.subjectColors()"
+          [subjects]="scheduleState.subjects()"
           [currentWeekType]="weekType"
           [todayWeekday]="calendar.todayWeekday()"
         />

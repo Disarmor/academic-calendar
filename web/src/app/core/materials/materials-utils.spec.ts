@@ -1,4 +1,5 @@
 import { MaterialsFile } from '../../models/materials';
+import { Subject } from '../../models/schedule';
 import { buildSubjectMaterials, fileExtension, formatFileSize, toMaterialItem } from './materials-utils';
 
 describe('fileExtension', () => {
@@ -50,19 +51,42 @@ describe('buildSubjectMaterials', () => {
         files: [
           { title: 'Программа', kind: 'program', path: 'files/b/rp.docx', size: 1 },
           { title: 'Лаба', kind: 'lab', path: 'files/b/lab.docx', size: 1 },
+          { title: 'Учебник', kind: 'textbook', path: 'files/b/book.pdf', size: 1 },
           { title: 'Лекция 2', kind: 'lecture', path: 'files/b/l2.pdf', size: 1 },
+          { title: 'Практика', kind: 'practice', path: 'files/b/pr.pdf', size: 1 },
           { title: 'Лекция 1', kind: 'lecture', path: 'files/b/l1.pdf', size: 1 },
         ],
       },
-      { subject: 'А', files: [] },
+      {
+        subject: 'А',
+        files: [{ title: 'Практика А', kind: 'practice', path: 'files/a/pr.pdf', size: 1 }],
+      },
     ],
   };
 
-  it('сортирует предметы по расписанию, файлы — по виду с сохранением порядка внутри вида', () => {
-    const result = buildSubjectMaterials(data, { А: 'cyan', Б: 'rose' });
+  const subjects: Readonly<Record<string, Subject>> = {
+    А: { id: 'a', name: 'А', color: 'cyan' },
+    Б: { id: 'b', name: 'Б', color: 'rose' },
+  };
+
+  it('сортирует предметы по расписанию и берёт из него код и цвет', () => {
+    const result = buildSubjectMaterials(data, subjects);
     expect(result.map((entry) => entry.subject)).toEqual(['А', 'Б', 'Вне расписания']);
+    expect(result.map((entry) => entry.id)).toEqual(['a', 'b', undefined]);
     expect(result.map((entry) => entry.color)).toEqual(['cyan', 'rose', undefined]);
+    expect(result.map((entry) => entry.count)).toEqual([1, 6, 0]);
     expect(result[1].task).toBe('Сделать');
-    expect(result[1].items.map((item) => item.title)).toEqual(['Лекция 2', 'Лекция 1', 'Лаба', 'Программа']);
+  });
+
+  it('делит файлы на лекционные и практические, внутри — по виду с сохранением порядка', () => {
+    const [a, b, outside] = buildSubjectMaterials(data, subjects);
+    const titles = (sections: typeof b.sections) =>
+      sections.map((section) => [section.id, section.items.map((item) => item.title)]);
+    expect(titles(b.sections)).toEqual([
+      ['lectures', ['Лекция 2', 'Лекция 1', 'Учебник', 'Программа']],
+      ['practice', ['Практика', 'Лаба']],
+    ]);
+    expect(titles(a.sections)).toEqual([['practice', ['Практика А']]]);
+    expect(outside.sections).toEqual([]);
   });
 });
