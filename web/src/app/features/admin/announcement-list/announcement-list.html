@@ -1,0 +1,33 @@
+<ul class="list">
+  @for (item of items(); track item.key) {
+    @let note = item.announcement;
+    <li class="item" [class.editing]="item.key === editingKey()">
+      <div class="head">
+        <h4 class="title">{{ note.title }}</h4>
+        <div class="tags">
+          @if (note.pinned) {
+            <span class="tag pin">Важно</span>
+          }
+          <span class="tag status status--{{ item.status }}">{{ statusLabels[item.status] }}</span>
+        </div>
+      </div>
+      <p class="text">{{ note.text }}</p>
+      <p class="dates mono">
+        <time [attr.datetime]="note.date">{{ note.date | date: 'dd.MM.yyyy' }}</time>
+        @if (note.expires) {
+          — <time [attr.datetime]="note.expires">{{ note.expires | date: 'dd.MM.yyyy' }}</time>
+        }
+      </p>
+      <div class="actions">
+        <button class="button" type="button" (click)="edit.emit(item.key)">
+          Изменить<span class="visually-hidden">: {{ note.title }}</span>
+        </button>
+        <button class="button button--danger" type="button" (click)="remove.emit(item.key)">
+          Удалить<span class="visually-hidden">: {{ note.title }}</span>
+        </button>
+      </div>
+    </li>
+  } @empty {
+    <li class="empty">Объявлений нет.</li>
+  }
+</ul>

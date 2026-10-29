@@ -1,0 +1,66 @@
+<app-page-header
+  [today]="calendar.today()"
+  [semester]="calendar.semester()"
+  [announcementsCount]="announcementsState.announcements().length"
+/>
+
+<h2 class="page-title">Объявления старосты</h2>
+<p class="lead">Правки копятся здесь и уходят на сайт одним коммитом после «Опубликовать». Сайт обновляется через 1–2 минуты.</p>
+
+@if (!signedIn()) {
+  <div class="narrow">
+    <app-token-form
+      [busy]="editor.phase() === 'loading'"
+      [error]="editor.error()"
+      (submitted)="editor.signIn($event)"
+    />
+  </div>
+} @else {
+  @let saving = editor.phase() === 'saving';
+  <div class="toolbar card" role="region" aria-label="Публикация">
+    <p class="status" aria-live="polite">
+      @if (saving) {
+        Публикуем…
+      } @else if (editor.isDirty()) {
+        <span class="dot dot--dirty" aria-hidden="true"></span> Есть неопубликованные изменения
+      } @else if (editor.justPublished()) {
+        <span class="dot dot--ok" aria-hidden="true"></span> Опубликовано. Сайт обновится через 1–2 минуты.
+      } @else {
+        <span class="dot" aria-hidden="true"></span> Изменений нет
+      }
+    </p>
+    <div class="buttons">
+      <button class="button button--primary" type="button" [disabled]="!editor.isDirty() || saving" (click)="editor.publish()">
+        Опубликовать
+      </button>
+      <button class="button" type="button" [disabled]="!editor.isDirty() || saving" (click)="discard()">
+        Отменить правки
+      </button>
+      <button class="button" type="button" [disabled]="saving" (click)="reload()">Загрузить заново</button>
+      <button class="button" type="button" [disabled]="saving" (click)="signOut()">Выйти</button>
+    </div>
+    @if (editor.error(); as message) {
+      <p class="error" role="alert">{{ message }}</p>
+    }
+  </div>
+
+  <div class="layout">
+    <div class="side">
+      <app-announcement-form
+        [editing]="editing()"
+        [defaultDate]="calendar.today()"
+        (saved)="save($event)"
+        (cancelled)="editingKey.set(undefined)"
+      />
+    </div>
+    <section class="card main" aria-labelledby="list-title">
+      <h3 class="card-title" id="list-title">Все объявления</h3>
+      <app-announcement-list
+        [items]="editor.items()"
+        [editingKey]="editingKey()"
+        (edit)="editingKey.set($event)"
+        (remove)="remove($event)"
+      />
+    </section>
+  </div>
+}

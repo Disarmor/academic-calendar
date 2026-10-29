@@ -8,7 +8,9 @@ import { AcademicCalendar } from '../../models/academic-calendar';
 import { AnnouncementsFile } from '../../models/announcement';
 import { MaterialKind, MaterialLink, MaterialsFile } from '../../models/materials';
 import { Schedule, SubjectColor } from '../../models/schedule';
+import { announcementErrors } from '../announcements/announcements-utils';
 import { isSafeUrl } from '../browser/safe-url';
+import { isValidLocalDate } from '../time/local-date';
 
 /** Проверка JSON-файлов: ошибка в данных должна ловиться тестами, а не на сайте. */
 const calendar = calendarJson as AcademicCalendar;
@@ -21,17 +23,12 @@ const PUBLIC_DIR = resolve('public');
 const MATERIAL_KINDS: readonly MaterialKind[] = ['lecture', 'practice', 'lab', 'textbook', 'program'];
 const MATERIAL_PATH_PATTERN = /^files\/([a-z0-9-]+\/)?[a-z0-9-]+\.(pdf|docx?|pptx?|xlsx?)$/;
 
-const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const TIME_PATTERN = /^([01]\d|2[0-3]):[0-5]\d$/;
 const SUBJECT_COLORS: readonly SubjectColor[] = ['cyan', 'amber', 'violet', 'rose', 'teal', 'indigo', 'lime', 'slate'];
 
-function isValidDate(value: string): boolean {
-  return DATE_PATTERN.test(value) && new Date(`${value}T00:00:00Z`).toISOString().startsWith(value);
-}
-
 function expectValidRange(range: { start: string; end: string }, name: string): void {
-  expect(isValidDate(range.start), name).toBe(true);
-  expect(isValidDate(range.end), name).toBe(true);
+  expect(isValidLocalDate(range.start), name).toBe(true);
+  expect(isValidLocalDate(range.end), name).toBe(true);
   expect(range.start <= range.end, name).toBe(true);
 }
 
@@ -46,7 +43,7 @@ function expectMaterialFile(file: MaterialLink): void {
 
 describe('public/data', () => {
   it('calendar.json: корректные даты событий и семестров', () => {
-    expect(isValidDate(calendar.weekParity.anchorWeekStart)).toBe(true);
+    expect(isValidLocalDate(calendar.weekParity.anchorWeekStart)).toBe(true);
     for (const event of calendar.events) {
       expectValidRange(event, event.title);
     }
@@ -56,7 +53,7 @@ describe('public/data', () => {
   });
 
   it('schedule.json: корректные дни, время, тип недели и ссылки', () => {
-    expect(isValidDate(schedule.validFrom) && isValidDate(schedule.validTo)).toBe(true);
+    expect(isValidLocalDate(schedule.validFrom) && isValidLocalDate(schedule.validTo)).toBe(true);
     expect(schedule.lessonDurationMinutes).toBeGreaterThan(0);
     for (const lesson of schedule.lessons) {
       expect(lesson.weekday >= 1 && lesson.weekday <= 7, lesson.subject).toBe(true);
@@ -113,14 +110,9 @@ describe('public/data', () => {
     }
   });
 
-  it('announcements.json: обязательные поля и корректные даты', () => {
+  it('announcements.json: те же правила, что и в форме старосты', () => {
     for (const item of announcements.announcements) {
-      expect(item.title.trim().length, 'title').toBeGreaterThan(0);
-      expect(item.text.trim().length, item.title).toBeGreaterThan(0);
-      expect(isValidDate(item.date), item.title).toBe(true);
-      if (item.expires !== undefined) {
-        expect(isValidDate(item.expires) && item.date <= item.expires, item.title).toBe(true);
-      }
+      expect(announcementErrors(item), item.title).toEqual([]);
     }
   });
 });

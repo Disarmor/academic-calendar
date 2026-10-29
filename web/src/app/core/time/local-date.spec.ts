@@ -1,10 +1,26 @@
-import { addDays, daysBetween, formatTime, isoWeekday, parseTime, startOfWeek, toZonedDateTime } from './local-date';
+import {
+  addDays,
+  daysBetween,
+  formatTime,
+  isoWeekday,
+  isValidLocalDate,
+  parseTime,
+  startOfWeek,
+  toZonedDateTime,
+} from './local-date';
 
 describe('local-date', () => {
   it('переводит момент времени в дату и минуты по Бишкеку (UTC+6)', () => {
     // 20:30 UTC 24 октября — это уже 02:30 25 октября в Бишкеке.
     expect(toZonedDateTime(new Date('2026-10-24T20:30:00Z'))).toEqual({ date: '2026-10-25', minutes: 150 });
     expect(toZonedDateTime(new Date('2026-10-24T10:30:00Z'))).toEqual({ date: '2026-10-24', minutes: 990 });
+  });
+
+  it('проверяет формат и существование даты', () => {
+    expect(isValidLocalDate('2026-02-28')).toBe(true);
+    expect(isValidLocalDate('2026-02-30')).toBe(false);
+    expect(isValidLocalDate('2026-2-28')).toBe(false);
+    expect(isValidLocalDate('')).toBe(false);
   });
 
   it('прибавляет дни через границы месяцев и годов', () => {

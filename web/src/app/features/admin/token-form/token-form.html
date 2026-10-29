@@ -1,0 +1,42 @@
+<section class="card" aria-labelledby="token-title">
+  <h3 class="card-title" id="token-title">Вход для старосты</h3>
+  <p class="hint">
+    Ключ — это токен GitHub с правом изменять файлы репозитория <span class="mono">academic-calendar</span>.
+    Он хранится только в этой вкладке и стирается при её закрытии или перезагрузке.
+  </p>
+
+  <form class="form" (ngSubmit)="submit()">
+    <label class="field">
+      <span class="label">Токен GitHub</span>
+      <input
+        class="input mono"
+        type="password"
+        autocomplete="off"
+        spellcheck="false"
+        placeholder="github_pat_…"
+        [formControl]="token"
+      />
+    </label>
+    <button class="button button--primary" type="submit" [disabled]="busy() || token.invalid">
+      {{ busy() ? 'Проверяем…' : 'Войти' }}
+    </button>
+  </form>
+
+  @if (error(); as message) {
+    <p class="error" role="alert">{{ message }}</p>
+  }
+
+  <details class="howto">
+    <summary>Как получить токен</summary>
+    <ol>
+      <li>
+        Откройте <a [href]="newTokenUrl" target="_blank" rel="noopener noreferrer">создание fine-grained токена</a> на
+        GitHub.
+      </li>
+      <li>Repository access: <b>Only select repositories</b> → <span class="mono">academic-calendar</span>.</li>
+      <li>Permissions → Repository permissions → <b>Contents: Read and write</b>. Остальные права не нужны.</li>
+      <li>Срок действия — например, 90 дней. Скопируйте токен и сохраните в менеджере паролей.</li>
+      <li>Если токен утёк, удалите его на той же странице GitHub — он сразу перестанет работать.</li>
+    </ol>
+  </details>
+</section>

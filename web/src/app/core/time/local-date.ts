@@ -5,6 +5,7 @@ import { Weekday } from '../../models/schedule';
 export const APP_TIME_ZONE = 'Asia/Bishkek';
 
 const MS_PER_DAY = 86_400_000;
+const LOCAL_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
 const zonedFormatter = new Intl.DateTimeFormat('en-CA', {
   timeZone: APP_TIME_ZONE,
@@ -40,6 +41,11 @@ function toUtcMs(date: LocalDate): number {
 
 function fromUtcMs(ms: number): LocalDate {
   return new Date(ms).toISOString().slice(0, 10);
+}
+
+/** Строка в формате YYYY-MM-DD и существующая дата (не 2026-02-30). */
+export function isValidLocalDate(value: string): boolean {
+  return LOCAL_DATE_PATTERN.test(value) && fromUtcMs(toUtcMs(value)) === value;
 }
 
 export function addDays(date: LocalDate, days: number): LocalDate {

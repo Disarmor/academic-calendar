@@ -39,6 +39,7 @@
           id="announcements"
           [announcements]="announcementsState.announcements()"
           [hasError]="announcementsState.hasError()"
+          [archive]="announcementsState.archive()"
         />
         <app-upcoming-events [items]="calendar.upcoming()" />
       </aside>

@@ -11,4 +11,6 @@ import { Announcement } from '../../../models/announcement';
 export class AnnouncementsBoard {
   readonly announcements = input.required<readonly Announcement[]>();
   readonly hasError = input.required<boolean>();
+  /** Объявления, срок показа которых закончился. */
+  readonly archive = input<readonly Announcement[]>([]);
 }

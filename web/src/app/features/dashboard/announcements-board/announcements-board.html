@@ -25,5 +25,26 @@
         <li class="empty">Новых объявлений нет.</li>
       }
     </ul>
+
+    @if (archive().length > 0) {
+      <details class="archive">
+        <summary class="archive-summary">
+          Архив объявлений
+          <span class="archive-count mono">{{ archive().length }}</span>
+          <svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" /></svg>
+        </summary>
+        <ul class="notes archive-list">
+          @for (note of archive(); track note.date + note.title) {
+            <li class="note note--archived">
+              <h3 class="note-title">{{ note.title }}</h3>
+              <p class="note-text">{{ note.text }}</p>
+              <p class="note-date mono">
+                <time [attr.datetime]="note.date">{{ note.date | date: 'dd.MM.yyyy' }}</time>
+              </p>
+            </li>
+          }
+        </ul>
+      </details>
+    }
   }
 </section>

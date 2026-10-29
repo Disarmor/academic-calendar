@@ -1,0 +1,37 @@
+.hint {
+  margin: 0 0 1rem;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.form {
+  display: grid;
+  gap: 0.75rem;
+
+  @media (min-width: 40rem) {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+  }
+}
+
+.error {
+  margin-top: 0.75rem;
+}
+
+.howto {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+
+  summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  ol {
+    display: grid;
+    gap: 0.375rem;
+    margin: 0.75rem 0 0;
+    padding-left: 1.25rem;
+  }
+}

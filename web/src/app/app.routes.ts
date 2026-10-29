@@ -11,5 +11,10 @@ export const routes: Routes = [
     title: 'Материалы · УТС(м)-1-26',
     loadComponent: () => import('./features/materials/materials').then((m) => m.Materials),
   },
+  {
+    path: 'admin',
+    title: 'Объявления · староста',
+    loadComponent: () => import('./features/admin/admin').then((m) => m.Admin),
+  },
   { path: '**', redirectTo: '' },
 ];

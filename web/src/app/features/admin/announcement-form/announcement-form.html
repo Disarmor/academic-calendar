@@ -1,0 +1,52 @@
+<section class="card" aria-labelledby="form-title">
+  <h3 class="card-title" id="form-title">{{ editing() ? 'Редактирование' : 'Новое объявление' }}</h3>
+
+  <form class="form" [formGroup]="form" (ngSubmit)="submit()">
+    <label class="field">
+      <span class="label">Заголовок</span>
+      <input class="input" type="text" formControlName="title" [maxLength]="titleMax" />
+    </label>
+
+    <label class="field">
+      <span class="label">Текст</span>
+      <textarea class="input" formControlName="text" [maxLength]="textMax"></textarea>
+      <span class="note">Обычный текст, переносы строк сохраняются. Без телефонов и других личных данных.</span>
+    </label>
+
+    <div class="row">
+      <label class="field">
+        <span class="label">Показывать с</span>
+        <input class="input mono" type="date" formControlName="date" />
+      </label>
+      <label class="field">
+        <span class="label">Показывать до (включительно)</span>
+        <input class="input mono" type="date" formControlName="expires" />
+      </label>
+    </div>
+
+    <p class="note">
+      После даты «Показывать до» объявление уходит в архив на главной, и его можно перечитать. Удалённое объявление
+      исчезает с сайта совсем.
+    </p>
+
+    <label class="check">
+      <input type="checkbox" formControlName="pinned" />
+      Закрепить (показывается первым с пометкой «Важно»)
+    </label>
+
+    @if (errors().length > 0) {
+      <ul class="errors" role="alert">
+        @for (message of errors(); track message) {
+          <li class="error">{{ message }}</li>
+        }
+      </ul>
+    }
+
+    <div class="actions">
+      <button class="button button--primary" type="submit">{{ editing() ? 'Сохранить' : 'Добавить' }}</button>
+      @if (editing()) {
+        <button class="button" type="button" (click)="cancelled.emit()">Отмена</button>
+      }
+    </div>
+  </form>
+</section>
