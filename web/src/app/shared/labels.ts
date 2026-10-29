@@ -1,4 +1,5 @@
 import { WeekType } from '../models/academic-calendar';
+import { MaterialKind } from '../models/materials';
 import { LessonKind, Weekday } from '../models/schedule';
 
 export const WEEK_TYPE_LABELS: Readonly<Record<WeekType, string>> = {
@@ -10,6 +11,12 @@ export const LESSON_KIND_LABELS: Readonly<Record<LessonKind, string>> = {
   lecture: 'Лекция',
   practice: 'Практика',
   lab: 'Лабораторная',
+};
+
+export const MATERIAL_KIND_LABELS: Readonly<Record<MaterialKind, string>> = {
+  ...LESSON_KIND_LABELS,
+  textbook: 'Учебник',
+  program: 'Программа',
 };
 
 export const WEEKDAY_LABELS: Readonly<Record<Weekday, string>> = {

@@ -1,0 +1,21 @@
+@let subject = view();
+<details class="card subject subject--{{ subject.color ?? 'slate' }}">
+  <summary class="summary">
+    <h3 class="name">{{ subject.subject }}</h3>
+    <span class="count mono">
+      <span class="visually-hidden">Файлов:</span>
+      {{ subject.items.length }}
+    </span>
+    <svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" /></svg>
+  </summary>
+
+  <div class="content">
+    @if (subject.task) {
+      <section class="task" [attr.aria-label]="'Задание: ' + subject.subject">
+        <h4 class="task-title">Задание</h4>
+        <p class="task-text">{{ subject.task }}</p>
+      </section>
+    }
+    <app-material-list [items]="subject.items" />
+  </div>
+</details>

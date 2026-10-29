@@ -1,0 +1,39 @@
+<ul class="files">
+  @for (item of items(); track item.href) {
+    <li>
+      <ng-template #content>
+        <span class="format mono format--{{ item.extension }}" aria-hidden="true">{{ item.format }}</span>
+        <span class="body">
+          <span class="title">{{ item.title }}</span>
+          <span class="meta">
+            @if (item.kind) {
+              <span class="tag kind kind--{{ item.kind }}">{{ kindLabels[item.kind] }}</span>
+            }
+            <span class="mono">{{ item.format }} · {{ item.size }}</span>
+          </span>
+        </span>
+        <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+          @if (item.download) {
+            <path d="M8 2.5v8M4.5 7 8 10.5 11.5 7M3 13.5h10" />
+          } @else {
+            <path d="M9.5 2.5h4v4M13.5 2.5 7.5 8.5M11.5 9.5v4h-9v-9h4" />
+          }
+        </svg>
+      </ng-template>
+
+      @if (item.download; as filename) {
+        <a class="file" [href]="item.href" [download]="filename">
+          <ng-container [ngTemplateOutlet]="content" />
+          <span class="visually-hidden">(скачать)</span>
+        </a>
+      } @else {
+        <a class="file" [href]="item.href" target="_blank" rel="noopener noreferrer">
+          <ng-container [ngTemplateOutlet]="content" />
+          <span class="visually-hidden">(откроется в новой вкладке)</span>
+        </a>
+      }
+    </li>
+  } @empty {
+    <li class="empty">Материалов пока нет.</li>
+  }
+</ul>

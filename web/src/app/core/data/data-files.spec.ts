@@ -1,8 +1,12 @@
+import { existsSync, statSync } from 'node:fs';
+import { resolve } from 'node:path';
 import announcementsJson from '../../../../public/data/announcements.json';
 import calendarJson from '../../../../public/data/calendar.json';
+import materialsJson from '../../../../public/data/materials.json';
 import scheduleJson from '../../../../public/data/schedule.json';
 import { AcademicCalendar } from '../../models/academic-calendar';
 import { AnnouncementsFile } from '../../models/announcement';
+import { MaterialKind, MaterialLink, MaterialsFile } from '../../models/materials';
 import { Schedule, SubjectColor } from '../../models/schedule';
 import { isSafeUrl } from '../browser/safe-url';
 
@@ -10,6 +14,12 @@ import { isSafeUrl } from '../browser/safe-url';
 const calendar = calendarJson as AcademicCalendar;
 const schedule = scheduleJson as Schedule;
 const announcements = announcementsJson as AnnouncementsFile;
+const materials = materialsJson as MaterialsFile;
+
+/** Тесты запускаются из папки `web/`. */
+const PUBLIC_DIR = resolve('public');
+const MATERIAL_KINDS: readonly MaterialKind[] = ['lecture', 'practice', 'lab', 'textbook', 'program'];
+const MATERIAL_PATH_PATTERN = /^files\/([a-z0-9-]+\/)?[a-z0-9-]+\.(pdf|docx?|pptx?|xlsx?)$/;
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const TIME_PATTERN = /^([01]\d|2[0-3]):[0-5]\d$/;
@@ -23,6 +33,15 @@ function expectValidRange(range: { start: string; end: string }, name: string): 
   expect(isValidDate(range.start), name).toBe(true);
   expect(isValidDate(range.end), name).toBe(true);
   expect(range.start <= range.end, name).toBe(true);
+}
+
+/** Путь безопасный (латиница, только внутри `files/`), файл существует и размер совпадает. */
+function expectMaterialFile(file: MaterialLink): void {
+  expect(file.title.trim().length, file.path).toBeGreaterThan(0);
+  expect(file.path, file.title).toMatch(MATERIAL_PATH_PATTERN);
+  const fullPath = resolve(PUBLIC_DIR, file.path);
+  expect(existsSync(fullPath), file.path).toBe(true);
+  expect(statSync(fullPath).size, file.path).toBe(file.size);
 }
 
 describe('public/data', () => {
@@ -57,6 +76,28 @@ describe('public/data', () => {
     }
     for (const lesson of schedule.lessons) {
       expect(subjectNames.has(lesson.subject), lesson.subject).toBe(true);
+    }
+  });
+
+  it('materials.json: предметы из расписания, без повторов', () => {
+    const subjectNames = new Set(schedule.subjects.map((subject) => subject.name));
+    const seen = new Set<string>();
+    for (const entry of materials.subjects) {
+      expect(subjectNames.has(entry.subject), entry.subject).toBe(true);
+      expect(seen.has(entry.subject), entry.subject).toBe(false);
+      seen.add(entry.subject);
+    }
+  });
+
+  it('materials.json: файлы существуют, размеры и виды корректны', () => {
+    const paths = new Set<string>();
+    for (const file of [...materials.templates, ...materials.subjects.flatMap((entry) => entry.files)]) {
+      expectMaterialFile(file);
+      expect(paths.has(file.path), file.path).toBe(false);
+      paths.add(file.path);
+    }
+    for (const file of materials.subjects.flatMap((entry) => entry.files)) {
+      expect(MATERIAL_KINDS, file.path).toContain(file.kind);
     }
   });
 

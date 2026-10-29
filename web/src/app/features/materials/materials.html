@@ -1,0 +1,32 @@
+<app-page-header
+  [today]="calendar.today()"
+  [semester]="calendar.semester()"
+  [announcementsCount]="announcementsState.announcements().length"
+/>
+
+<h2 class="page-title">Учебные материалы</h2>
+<p class="lead">Лекции, практики и задания по предметам. PDF открывается в браузере, остальные файлы скачиваются.</p>
+
+@if (materials.hasError()) {
+  <p class="state state--error" role="alert">Не удалось загрузить материалы. Попробуйте обновить страницу позже.</p>
+} @else if (materials.isLoading()) {
+  <p class="state" aria-live="polite">Загрузка…</p>
+} @else {
+  <div class="layout">
+    <!-- Шаблоны идут первыми: на мобильном они нужны чаще всего, на десктопе уходят в правую колонку. -->
+    <aside class="side" aria-labelledby="templates-title">
+      <section class="card">
+        <h3 class="card-title" id="templates-title">Шаблоны</h3>
+        <app-material-list [items]="materials.templates()" />
+      </section>
+    </aside>
+
+    <div class="main">
+      @for (subject of materials.subjects(); track subject.subject) {
+        <app-subject-materials [view]="subject" />
+      } @empty {
+        <p class="state">Материалов пока нет.</p>
+      }
+    </div>
+  </div>
+}

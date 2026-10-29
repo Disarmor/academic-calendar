@@ -4,7 +4,7 @@ import { CalendarState } from '../../core/calendar/calendar-state';
 import { AcademicData } from '../../core/data/academic-data';
 import { ScheduleState } from '../../core/schedule/schedule-state';
 import { AnnouncementsBoard } from './announcements-board/announcements-board';
-import { PageHeader } from './page-header/page-header';
+import { PageHeader } from '../../shared/ui/page-header/page-header';
 import { TodayLessons } from './today-lessons/today-lessons';
 import { UpcomingEvents } from './upcoming-events/upcoming-events';
 import { WeekIndicator } from './week-indicator/week-indicator';
