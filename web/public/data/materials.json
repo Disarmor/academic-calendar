@@ -20,7 +20,8 @@
         { "title": "Лекция 1. Введение", "kind": "lecture", "path": "files/poe/lekciya-1.docx", "size": 164964 },
         { "title": "Лекция 2а. Постановка задачи идентификации", "kind": "lecture", "path": "files/poe/lekciya-2a.docx", "size": 112240 },
         { "title": "Лекция 4. Основные понятия теории оптимального эксперимента", "kind": "lecture", "path": "files/poe/lekciya-4.docx", "size": 43865 },
-        { "title": "Лекция 6. Некоторые математические соотношения при планировании эксперимента", "kind": "lecture", "path": "files/poe/lekciya-6.docx", "size": 63981 },
+        { "title": "Лекция 6. Основные математические соотношения при планировании эксперимента", "kind": "lecture", "path": "files/poe/lekciya-6.docx", "size": 64486 },
+        { "title": "Лекция 7. Критерии оптимальности планов эксперимента", "kind": "lecture", "path": "files/poe/lekciya-7.docx", "size": 17768 },
         { "title": "Планы эксперимента: теория", "kind": "practice", "path": "files/poe/plany-teoriya.pdf", "size": 469481 },
         { "title": "План эксперимента: пример", "kind": "practice", "path": "files/poe/plan-primer.pdf", "size": 606225 },
         { "title": "Планы эксперимента: задачи", "kind": "practice", "path": "files/poe/plany-zadachi.pdf", "size": 250178 },
@@ -58,9 +59,10 @@
     },
     {
       "subject": "НИР",
-      "task": "Необходимо законспектировать лекционный материал и подготовить реферат по выбранной теме. Темы ещё не определены.",
+      "task": "Необходимо к модулю до 05.11.2026 изложить материалы по теме своей диссертации по примеру из файла «Пример: тема диссертации» и назвать свой файл так: Тема_диссертации_ФИО_УТСм_1_26.",
       "files": [
         { "title": "Презентация 1 модуля: теория вероятностей и математическая статистика", "kind": "lecture", "path": "files/nir/prezentaciya-modul-1.pptx", "size": 1478210 },
+        { "title": "Пример: тема диссертации", "kind": "practice", "path": "files/nir/primer-tema-dissertacii.docx", "size": 21739 },
         { "title": "Пушкарь А. И., Потрашкова Л. В. Основы научных исследований и организация научно-исследовательской деятельности. Учебное пособие, 2009", "kind": "textbook", "path": "files/nir/posobie-osnovy-nauchnyh-issledovanij.pdf", "size": 5091370 }
       ]
     }
