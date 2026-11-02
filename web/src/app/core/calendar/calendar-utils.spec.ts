@@ -37,14 +37,14 @@ describe('getWeekType', () => {
 describe('события календаря', () => {
   const events: CalendarEvent[] = [
     { title: 'Исследовательская практика 1', type: 'practice', start: '2026-10-19', end: '2026-12-25' },
-    { title: 'Текущий контроль', type: 'control', start: '2026-11-02', end: '2026-11-06' },
+    { title: 'Модуль-1', type: 'control', start: '2026-11-02', end: '2026-11-06' },
     { title: 'Новогодние каникулы', type: 'vacation', start: '2027-01-01', end: '2027-01-10' },
   ];
 
   it('находит события, активные в дату (границы включительно)', () => {
     expect(activeEvents(events, '2026-11-06').map((event) => event.title)).toEqual([
       'Исследовательская практика 1',
-      'Текущий контроль',
+      'Модуль-1',
     ]);
     expect(activeEvents(events, '2026-11-07').map((event) => event.title)).toEqual(['Исследовательская практика 1']);
   });
