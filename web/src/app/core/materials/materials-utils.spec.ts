@@ -1,6 +1,13 @@
-import { MaterialsFile } from '../../models/materials';
+import { SubjectMaterials } from '../../models/materials';
 import { Subject } from '../../models/schedule';
-import { buildSubjectMaterials, fileExtension, formatFileSize, toMaterialItem } from './materials-utils';
+import {
+  buildModules,
+  buildSubjectMaterials,
+  fileExtension,
+  formatFileSize,
+  initialModuleId,
+  toMaterialItem,
+} from './materials-utils';
 
 describe('fileExtension', () => {
   it('возвращает расширение в нижнем регистре', () => {
@@ -21,7 +28,12 @@ describe('formatFileSize', () => {
 
 describe('toMaterialItem', () => {
   it('PDF открывается в браузере', () => {
-    const item = toMaterialItem({ title: 'Пособие', kind: 'textbook', path: 'files/x/posobie.pdf', size: 1024 });
+    const item = toMaterialItem({
+      title: 'Пособие',
+      kind: 'textbook',
+      path: 'files/x/posobie.pdf',
+      size: 1024,
+    });
     expect(item).toEqual({
       title: 'Пособие',
       kind: 'textbook',
@@ -34,35 +46,36 @@ describe('toMaterialItem', () => {
   });
 
   it('остальные файлы скачиваются под читаемым именем без запрещённых символов', () => {
-    const item = toMaterialItem({ title: 'Задачи 1/2: «план»?', path: 'files/zadachi.docx', size: 10 });
+    const item = toMaterialItem({
+      title: 'Задачи 1/2: «план»?',
+      path: 'files/zadachi.docx',
+      size: 10,
+    });
     expect(item.kind).toBeUndefined();
     expect(item.download).toBe('Задачи 1 2 «план».docx');
   });
 });
 
 describe('buildSubjectMaterials', () => {
-  const data: MaterialsFile = {
-    templates: [],
-    subjects: [
-      { subject: 'Вне расписания', files: [] },
-      {
-        subject: 'Б',
-        task: 'Сделать',
-        files: [
-          { title: 'Программа', kind: 'program', path: 'files/b/rp.docx', size: 1 },
-          { title: 'Лаба', kind: 'lab', path: 'files/b/lab.docx', size: 1 },
-          { title: 'Учебник', kind: 'textbook', path: 'files/b/book.pdf', size: 1 },
-          { title: 'Лекция 2', kind: 'lecture', path: 'files/b/l2.pdf', size: 1 },
-          { title: 'Практика', kind: 'practice', path: 'files/b/pr.pdf', size: 1 },
-          { title: 'Лекция 1', kind: 'lecture', path: 'files/b/l1.pdf', size: 1 },
-        ],
-      },
-      {
-        subject: 'А',
-        files: [{ title: 'Практика А', kind: 'practice', path: 'files/a/pr.pdf', size: 1 }],
-      },
-    ],
-  };
+  const data: readonly SubjectMaterials[] = [
+    { subject: 'Вне расписания', files: [] },
+    {
+      subject: 'Б',
+      task: 'Сделать',
+      files: [
+        { title: 'Программа', kind: 'program', path: 'files/b/rp.docx', size: 1 },
+        { title: 'Лаба', kind: 'lab', path: 'files/b/lab.docx', size: 1 },
+        { title: 'Учебник', kind: 'textbook', path: 'files/b/book.pdf', size: 1 },
+        { title: 'Лекция 2', kind: 'lecture', path: 'files/b/l2.pdf', size: 1 },
+        { title: 'Практика', kind: 'practice', path: 'files/b/pr.pdf', size: 1 },
+        { title: 'Лекция 1', kind: 'lecture', path: 'files/b/l1.pdf', size: 1 },
+      ],
+    },
+    {
+      subject: 'А',
+      files: [{ title: 'Практика А', kind: 'practice', path: 'files/a/pr.pdf', size: 1 }],
+    },
+  ];
 
   const subjects: Readonly<Record<string, Subject>> = {
     А: { id: 'a', name: 'А', color: 'cyan' },
@@ -88,5 +101,43 @@ describe('buildSubjectMaterials', () => {
     ]);
     expect(titles(a.sections)).toEqual([['practice', ['Практика А']]]);
     expect(outside.sections).toEqual([]);
+  });
+});
+
+describe('модули', () => {
+  const subjects: Readonly<Record<string, Subject>> = {
+    А: { id: 'a', name: 'А', color: 'cyan' },
+    Б: { id: 'b', name: 'Б', color: 'rose' },
+  };
+  const modules = buildModules(
+    [
+      {
+        id: 'module-1',
+        title: 'Модуль 1',
+        subjects: [
+          { subject: 'Б', files: [] },
+          { subject: 'А', files: [] },
+        ],
+      },
+      { id: 'module-2', title: 'Модуль 2', subjects: [{ subject: 'А', task: 'Новое', files: [] }] },
+    ],
+    subjects,
+  );
+
+  it('buildModules сохраняет порядок модулей и сортирует предметы внутри', () => {
+    expect(modules.map((module) => module.title)).toEqual(['Модуль 1', 'Модуль 2']);
+    expect(modules[0].subjects.map((subject) => subject.id)).toEqual(['a', 'b']);
+    expect(modules[1].subjects[0].task).toBe('Новое');
+  });
+
+  it('initialModuleId: по умолчанию последний модуль', () => {
+    expect(initialModuleId(modules, undefined)).toBe('module-2');
+    expect(initialModuleId(modules, 'unknown')).toBe('module-2');
+    expect(initialModuleId([], 'a')).toBeUndefined();
+  });
+
+  it('initialModuleId: по якорю — последний модуль, где есть предмет', () => {
+    expect(initialModuleId(modules, 'a')).toBe('module-2');
+    expect(initialModuleId(modules, 'b')).toBe('module-1');
   });
 });

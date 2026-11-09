@@ -26,8 +26,18 @@ export interface SubjectMaterials {
   readonly files: readonly MaterialFile[];
 }
 
+/** Задания и материалы к одному модулю (текущему контролю). */
+export interface MaterialsModule {
+  /** Код модуля для вкладки, например `module-1`. */
+  readonly id: string;
+  /** Подпись вкладки, например «Модуль 1». */
+  readonly title: string;
+  readonly subjects: readonly SubjectMaterials[];
+}
+
 export interface MaterialsFile {
   /** Общие шаблоны, например титульный лист. */
   readonly templates: readonly MaterialLink[];
-  readonly subjects: readonly SubjectMaterials[];
+  /** Модули по порядку; по умолчанию открыт последний (текущий). */
+  readonly modules: readonly MaterialsModule[];
 }

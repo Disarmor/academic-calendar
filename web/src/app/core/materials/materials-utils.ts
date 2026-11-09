@@ -1,4 +1,11 @@
-import { MaterialFile, MaterialKind, MaterialLink, MaterialSectionId, MaterialsFile } from '../../models/materials';
+import {
+  MaterialFile,
+  MaterialKind,
+  MaterialLink,
+  MaterialSectionId,
+  MaterialsModule,
+  SubjectMaterials,
+} from '../../models/materials';
 import { Subject, SubjectColor } from '../../models/schedule';
 
 /** Файл, подготовленный к показу: ссылка, формат и размер. */
@@ -29,6 +36,12 @@ export interface SubjectMaterialsView {
   readonly count: number;
   /** Только непустые разделы. */
   readonly sections: readonly MaterialSection[];
+}
+
+export interface MaterialsModuleView {
+  readonly id: string;
+  readonly title: string;
+  readonly subjects: readonly SubjectMaterialsView[];
 }
 
 /** Какие виды попадают в раздел; порядок видов задаёт порядок файлов внутри раздела. */
@@ -93,7 +106,7 @@ export function splitIntoSections(files: readonly MaterialFile[]): MaterialSecti
  * Внутри предмета файлы разбиты на разделы и сгруппированы по виду, порядок внутри вида — как в данных.
  */
 export function buildSubjectMaterials(
-  data: MaterialsFile,
+  entries: readonly SubjectMaterials[],
   subjects: Readonly<Record<string, Subject>>,
 ): SubjectMaterialsView[] {
   const subjectOrder = Object.keys(subjects);
@@ -101,7 +114,7 @@ export function buildSubjectMaterials(
     const index = subjectOrder.indexOf(subject);
     return index === -1 ? subjectOrder.length : index;
   };
-  return [...data.subjects]
+  return [...entries]
     .sort((a, b) => position(a.subject) - position(b.subject))
     .map((entry) => ({
       id: subjects[entry.subject]?.id,
@@ -111,4 +124,30 @@ export function buildSubjectMaterials(
       count: entry.files.length,
       sections: splitIntoSections(entry.files),
     }));
+}
+
+/** Модули в порядке данных, предметы внутри — как в `buildSubjectMaterials`. */
+export function buildModules(
+  modules: readonly MaterialsModule[],
+  subjects: Readonly<Record<string, Subject>>,
+): MaterialsModuleView[] {
+  return modules.map((module) => ({
+    id: module.id,
+    title: module.title,
+    subjects: buildSubjectMaterials(module.subjects, subjects),
+  }));
+}
+
+/**
+ * Какой модуль открыть: последний (текущий). Если в ссылке есть якорь предмета (`/materials#poe`),
+ * то последний модуль, где этот предмет есть. Пустой список — `undefined`.
+ */
+export function initialModuleId(
+  modules: readonly MaterialsModuleView[],
+  fragment: string | null | undefined,
+): string | undefined {
+  const withSubject = fragment
+    ? modules.filter((module) => module.subjects.some((subject) => subject.id === fragment))
+    : [];
+  return (withSubject.at(-1) ?? modules.at(-1))?.id;
 }

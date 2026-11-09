@@ -20,11 +20,26 @@ const materials = materialsJson as MaterialsFile;
 
 /** Тесты запускаются из папки `web/`. */
 const PUBLIC_DIR = resolve('public');
-const MATERIAL_KINDS: readonly MaterialKind[] = ['lecture', 'practice', 'lab', 'textbook', 'program'];
+const MATERIAL_KINDS: readonly MaterialKind[] = [
+  'lecture',
+  'practice',
+  'lab',
+  'textbook',
+  'program',
+];
 const MATERIAL_PATH_PATTERN = /^files\/([a-z0-9-]+\/)?[a-z0-9-]+\.(pdf|docx?|pptx?|xlsx?)$/;
 
 const TIME_PATTERN = /^([01]\d|2[0-3]):[0-5]\d$/;
-const SUBJECT_COLORS: readonly SubjectColor[] = ['cyan', 'amber', 'violet', 'rose', 'teal', 'indigo', 'lime', 'slate'];
+const SUBJECT_COLORS: readonly SubjectColor[] = [
+  'cyan',
+  'amber',
+  'violet',
+  'rose',
+  'teal',
+  'indigo',
+  'lime',
+  'slate',
+];
 
 function expectValidRange(range: { start: string; end: string }, name: string): void {
   expect(isValidLocalDate(range.start), name).toBe(true);
@@ -84,28 +99,43 @@ describe('public/data', () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
-  it('materials.json: предметы из расписания, без повторов, файлы в папке предмета', () => {
+  it('materials.json: модули с уникальным кодом и подписью', () => {
+    expect(materials.modules.length).toBeGreaterThan(0);
+    const ids = materials.modules.map((module) => module.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    for (const module of materials.modules) {
+      expect(module.id).toMatch(/^[a-z0-9-]+$/);
+      expect(module.title.trim().length, module.id).toBeGreaterThan(0);
+    }
+  });
+
+  it('materials.json: предметы из расписания, без повторов внутри модуля, файлы в папке предмета', () => {
     const subjectsByName = new Map(schedule.subjects.map((subject) => [subject.name, subject]));
-    const seen = new Set<string>();
-    for (const entry of materials.subjects) {
-      const subject = subjectsByName.get(entry.subject);
-      expect(subject, entry.subject).toBeDefined();
-      expect(seen.has(entry.subject), entry.subject).toBe(false);
-      seen.add(entry.subject);
-      for (const file of entry.files) {
-        expect(file.path.startsWith(`files/${subject?.id}/`), file.path).toBe(true);
+    for (const module of materials.modules) {
+      const seen = new Set<string>();
+      for (const entry of module.subjects) {
+        const subject = subjectsByName.get(entry.subject);
+        expect(subject, entry.subject).toBeDefined();
+        expect(seen.has(entry.subject), `${module.id}: ${entry.subject}`).toBe(false);
+        seen.add(entry.subject);
+        for (const file of entry.files) {
+          expect(file.path.startsWith(`files/${subject?.id}/`), file.path).toBe(true);
+        }
       }
     }
   });
 
   it('materials.json: файлы существуют, размеры и виды корректны', () => {
     const paths = new Set<string>();
-    for (const file of [...materials.templates, ...materials.subjects.flatMap((entry) => entry.files)]) {
+    const subjectFiles = materials.modules.flatMap((module) =>
+      module.subjects.flatMap((entry) => entry.files),
+    );
+    for (const file of [...materials.templates, ...subjectFiles]) {
       expectMaterialFile(file);
       expect(paths.has(file.path), file.path).toBe(false);
       paths.add(file.path);
     }
-    for (const file of materials.subjects.flatMap((entry) => entry.files)) {
+    for (const file of subjectFiles) {
       expect(MATERIAL_KINDS, file.path).toContain(file.kind);
     }
   });

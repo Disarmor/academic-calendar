@@ -5,10 +5,14 @@
 />
 
 <h2 class="page-title">Учебные материалы</h2>
-<p class="lead">Лекции, практики и задания по предметам. PDF открывается в браузере, остальные файлы скачиваются.</p>
+<p class="lead">
+  Лекции, практики и задания по предметам. PDF открывается в браузере, остальные файлы скачиваются.
+</p>
 
 @if (materials.hasError()) {
-  <p class="state state--error" role="alert">Не удалось загрузить материалы. Попробуйте обновить страницу позже.</p>
+  <p class="state state--error" role="alert">
+    Не удалось загрузить материалы. Попробуйте обновить страницу позже.
+  </p>
 } @else if (materials.isLoading()) {
   <p class="state" aria-live="polite">Загрузка…</p>
 } @else {
@@ -22,8 +26,32 @@
     </aside>
 
     <div class="main">
-      @for (subject of materials.subjects(); track subject.subject) {
-        <app-subject-materials [view]="subject" [open]="subject.id !== undefined && subject.id === fragment()" />
+      @if (materials.modules().length > 1) {
+        <div class="modules">
+          <span class="modules-label" id="modules-label">Задания к</span>
+          <div class="toggle" role="group" aria-labelledby="modules-label">
+            @for (module of materials.modules(); track module.id) {
+              <button
+                type="button"
+                [attr.aria-pressed]="module.id === selectedModuleId()"
+                (click)="selectedModuleId.set(module.id)"
+              >
+                {{ module.title }}
+              </button>
+            }
+          </div>
+        </div>
+      }
+
+      @for (module of selectedModule(); track module.id) {
+        @for (subject of module.subjects; track subject.subject) {
+          <app-subject-materials
+            [view]="subject"
+            [open]="subject.id !== undefined && subject.id === fragment()"
+          />
+        } @empty {
+          <p class="state">Заданий к этому модулю пока нет.</p>
+        }
       } @empty {
         <p class="state">Материалов пока нет.</p>
       }
